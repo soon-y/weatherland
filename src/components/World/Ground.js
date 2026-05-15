@@ -1,0 +1,40 @@
+import { useGLTF } from '@react-three/drei'
+import { param } from '@/lib/param'
+import { Bench } from './Bench'
+
+export default function WorldGround() {
+  const { nodes, materials } = useGLTF('models/land.glb')
+
+  return (
+    <group dispose={null} scale={param.groundRadius * 2} position={param.groundPos}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.ground.geometry}
+        material={materials.groundLand}
+        position={[0, -0.406, 0]}
+        scale={0.847}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.rock002.geometry}
+        material={materials.rock}
+        position={[0, 0.037, -0.102]}
+        scale={[0.929, 0.1, 0.929]}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.rock001.geometry}
+        material={materials.rock}
+        position={[0, 0.037, -0.102]}
+        scale={[0.929, 0.1, 0.929]}
+      />
+
+      <Bench />
+    </group>
+  )
+}
+
+useGLTF.preload('models/land.glb')

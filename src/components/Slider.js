@@ -1,0 +1,232 @@
+"use client"
+
+import { useEffect, useState, useRef } from "react"
+import WeatherIcon from "./weatherIcon"
+import { param, tempColorIndex, tempColorList, todayProgress } from "@/lib/param"
+
+export default function Slider({ hourly, setIndex, index }) {
+  const today = new Date()
+  const ref = useRef(null)
+  const [boxWidth, setBoxWidth] = useState(0)
+  const [graphWidth, setGraphWidth] = useState(0)
+  const [hourlyData, setHourlyData] = useState(null)
+  const [time, setTime] = useState(null)
+  const [hover, setHover] = useState(null)
+  const graphSize = { w: graphWidth, h: param.sliderHeight * 0.3 }
+  const temp = hourly.temperature_2m
+  const feels = hourly.apparent_temperature
+  const max = Math.max(...temp, ...feels) + 3
+  const min = Math.min(...temp, ...feels) - 3
+  const minIndex = tempColorIndex(min)
+  const maxIndex = tempColorIndex(max)
+  const colorRange = tempColorList.slice(minIndex, maxIndex + 1)
+  const isDay = hourly.is_day[index]
+
+  useEffect(() => {
+    const currentHour = new Date().getHours()
+    setIndex(currentHour)
+    setTime(currentHour)
+
+    const handleResize = () => {
+      const windowWidth = window.innerWidth - 32
+      const divide = windowWidth > 1000 ? 10 : 6
+      const box = windowWidth / divide
+      setBoxWidth(box)
+      setGraphWidth(box * 168)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!ref.current || index > 168 - 6) return
+
+    ref.current.scrollTo({
+      left: boxWidth * index,
+    })
+  }, [index])
+
+  useEffect(() => {
+    if (!hourly) return
+
+    const tempArr = []
+
+    for (let i = 0; i < hourly.time.length; i++) {
+      tempArr.push({
+        index: i,
+        time: hourly.time[i].split("T")[1].split(":")[0],
+        code: hourly.weather_code[i],
+        temp: hourly.temperature_2m[i],
+        feels: hourly.apparent_temperature[i],
+        isDay: hourly.is_day[i],
+        probability: hourly.precipitation_probability[i]
+      })
+
+      setHourlyData(tempArr)
+    }
+  }, [hourly])
+
+  const points = (data) => {
+    let x, y
+    let result = []
+
+    for (let i = 0; i < data.length; i++) {
+      x = i / (data.length - 1) * graphSize.w
+      y = graphSize.h - ((data[i] - min) / (max - min)) * graphSize.h
+
+      if (i == 0) x = x + 5
+      if (i == data.length - 1) x = x - 5
+      result.push({ x, y })
+    }
+    return result
+  }
+
+  const getSmoothPath = (points) => {
+    if (!points || points.length < 2) return { d: '', stroke: 'white' }
+
+    let d = `M ${points[0].x} ${points[0].y}`
+    let stroke = 'white'
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i]
+      const p1 = points[i + 1]
+      d += ` Q ${p0.x} ${p0.y}, ${p1.x} ${p1.y}`
+      stroke = p0.color
+    }
+    return { d, stroke }
+  }
+
+  const handleScroll = () => {
+    const el = ref.current
+    const scrollLeft = Math.round(el.scrollLeft / boxWidth)
+    setIndex(scrollLeft)
+  }
+
+  const handleClick = e => {
+    const rect = e.currentTarget.getBoundingClientRect()
+
+    const x = e.clientX - rect.left
+    setIndex(Math.round(x / boxWidth))
+  }
+
+  const handleHover = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+
+    const x = e.clientX - rect.left
+    setHover(Math.round(x / boxWidth))
+  }
+
+  const ptsTemp = points(temp)
+  const ptsFeels = points(feels)
+
+  if (!hourlyData) return
+  return (
+    <>
+      <button className={`cursor-pointer absolute top-[-8px] right-5 text-sm pb-4 ${isDay ? 'text-black' : 'text-white'}`}
+        style={{ display: index === time ? 'none' : 'block' }}
+        onClick={() => setIndex(time)}>
+        back to NOW
+      </button>
+
+      <div ref={ref} onScrollEnd={handleScroll}
+        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none`}>
+        {hourlyData.map((el, i) => (
+          <div key={i} onClick={() => setIndex(i)}
+            className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10 rounded-lg
+              ${i < time ? "text-gray-300" : "text-white"}  ${i === index && "font-bold"} ${i === hover && "bg-white/10"}`}
+            style={{ width: `${boxWidth}px`, height: param.sliderHeight + 'px' }}
+          >
+            <div className="grid grid-rows-[35%_30%_15%_20%] h-full">
+              <div className={`${i < time ? 'opacity-40' : 'opacity-100'} flex justify-center py-1`}>
+                <WeatherIcon code={el.code} isDay={el.isDay} probability={el.probability} />
+              </div>
+
+              <div />
+
+              <div className={`leading-none opacity-80 flex items-center justify-center text-[11px] sm:text-sm`}>
+                {el.temp}° / {el.feels}°
+              </div>
+
+              <div className="flex items-start justify-center">{i === time ? 'Now' : el.time + 'h'}</div>
+            </div>
+          </div>
+        ))}
+
+        <div className="absolute cursor-pointer" onClick={handleClick} onMouseMove={handleHover} onMouseLeave={() => setHover(null)} style={{
+          top: '40px', left: boxWidth / 2,
+          height: param.sliderHeight * 0.3 + 'px',
+          width: boxWidth * 167
+        }}>
+          <svg width='100%' height='100%' className="relative" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
+            <defs>
+              <linearGradient id="color" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
+                {colorRange.map((color, i) => (
+                  <stop
+                    key={i}
+                    offset={`${(i / (colorRange.length - 1)) * 100}%`}
+                    stopColor={color}
+                  />
+                ))}
+              </linearGradient>
+
+              <mask id="sliderMask" maskUnits="userSpaceOnUse">
+                <rect x="0" y="0" width={graphSize.w} height={graphSize.h} fill="white" />
+                <rect x="0" y="0" width={(todayProgress(today) / 7) + '%'} height={graphSize.h + 10} fill="rgba(0,0,0,0.5)" />
+              </mask>
+            </defs>
+
+            <g mask="url(#sliderMask)">
+              <path
+                d={getSmoothPath(ptsTemp).d}
+                fill="none"
+                stroke={'url(#color)'}
+                strokeWidth="2"
+                className="opacity-50"
+              />
+
+              {ptsTemp.map((p, i) => (
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#color)'} />
+              ))}
+            </g>
+
+            <g mask="url(#sliderMask)">
+              <path
+                d={getSmoothPath(ptsFeels).d}
+                fill="none"
+                stroke={'url(#color)'}
+                strokeWidth="2"
+                className="opacity-50"
+              />
+
+              {ptsFeels.map((p, i) => (
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#color)'} stroke="rgba(255,255,255,0.6)" />
+              ))}
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div className="fixed left-4 bottom-4 select-none">
+        {hourlyData &&
+          <div className="text-sm font-semibold items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${isDay ? 'bg-black/40' : 'bg-white/40'}`} />
+              <span className={`mr-2 ${isDay ? 'text-black' : 'text-white'}`}>Actual</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full outline ${isDay ? 'bg-black/40 outline-black' : 'bg-white/40 outline-white'}`} />
+              <span className={`mr-2 ${isDay ? 'text-black' : 'text-white'}`}>Feels like</span>
+            </div>
+          </div>
+        }
+        <div className={`shadow-lg outline rounded-lg ${isDay ? 'outline-black/50' : 'outline-white/50'}`}
+        style={{ width: boxWidth, height: param.sliderHeight + 'px' }} />
+      </div>
+    </>
+  )
+}

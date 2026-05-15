@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #3f3f3f;
   --foreground: #171717;
 }
 
@@ -10,6 +10,60 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --animate-wiggle: wiggle 2s infinite;
+  --animate-raindrop: raindrop 2s infinite;
+  --animate-snowdrop: snowdrop 2s infinite;
+  --animate-snow: snow 2s infinite;
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: translateX(-1px);
+      opacity: 50%;
+    }
+
+    50% {
+      transform: translateX(1px);
+      opacity: 100%;
+    }
+  }
+
+  @keyframes raindrop {
+    0%,
+    100% {
+      transform: translateX(4px) translateY(-4px);
+      opacity: 0%;
+    }
+
+    80% {
+      transform: translateX(0px) translateY(0px);
+      opacity: 100%;
+    }
+  }
+
+  @keyframes snowdrop {
+    0%,
+    100% {
+      transform: translateY(-12px) rotate(0deg);
+      opacity: 0%;
+    }
+
+    80% {
+      transform: translateY(-6px) rotate(360deg);
+      opacity: 100%;
+    }
+  }
+
+  @keyframes snow {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +77,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  scrollbar-width: none;
+}
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
