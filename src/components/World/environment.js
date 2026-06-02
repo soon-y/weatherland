@@ -42,9 +42,9 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
   const { progress, windDirection, windSpeed, gustsSpeed } = useControls('Env', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
-    windDirection: { value: 0, min: 0, max: 360, step: 1 },
-    windSpeed: { value: 0, min: 0, max: 50, step: 1 },
-    gustsSpeed: { value: 0, min: 0, max: 100, step: 1 },
+    windDirection: { value: 90, min: 0, max: 360, step: 1 },
+    windSpeed: { value: 2, min: 0, max: 50, step: 1 },
+    gustsSpeed: { value: 5, min: 0, max: 100, step: 1 },
   }, { store })
 
   return (
