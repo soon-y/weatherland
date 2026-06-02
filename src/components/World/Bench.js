@@ -7,7 +7,7 @@ import { useGLTF } from '@react-three/drei'
 export function Bench(props) {
   const { nodes, materials } = useGLTF('models/bench.glb')
   return (
-    <group {...props} dispose={null} scale={0.25} position={[0.15, 0.02, -0.3]}>
+    <group {...props} dispose={null} scale={0.2} position={[0.05, 0.02, -0.3]}>
       <mesh
         castShadow
         receiveShadow
