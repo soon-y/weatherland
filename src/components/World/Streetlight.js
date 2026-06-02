@@ -23,7 +23,7 @@ export function Streetlight({ progress }) {
 
   return (
     <group scale={param.groundRadius * 2} position={param.groundPos}>
-      <group dispose={null} scale={1} position={[0.6, 0.01, -0.3]} rotation-y={-Math.PI * 0.2}>
+      <group dispose={null} scale={1} position={[0.5, 0.01, -0.3]} rotation-y={-Math.PI * 0.2}>
         <mesh
           castShadow
           receiveShadow
