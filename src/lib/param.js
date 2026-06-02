@@ -20,7 +20,7 @@ export const param = {
   days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   daysShort: ["S", "M", "T", "W", "T", "F", "S"],
   sliderHeight: 150,
-  sliderStyles: 'bg-black/50 backdrop-blur-xl rounded-lg',
+  sliderStyles: 'bg-black/50 backdrop-blur-xl rounded-b-lg rounded-tr-lg',
   weatherBarContainer: 'relative h-[28px]',
   weatherBar: 'absolute inset-y-2.5 h-2 w-full overflow-hidden bg-black/30',
   weatherBarDisc: 'absolute inset-y-2.5 rounded-full h-2 outline-2 outline-white/80 aspect-square bg-white/10',
@@ -41,8 +41,8 @@ export const param = {
   pondRadius: 4.2,
   pondPos: [-0.5, 0.01, -1.1],
   sunRadius: 15,
-  streetlightPos: [0.45, 0.75, -0.1],
-  streetlightTargetPos: [0.4, -1, 0],
+  streetlightPos: [0.3, 0.8, -0.1],
+  streetlightTargetPos: [0.2, -1, 0.5],
 }
 
 export function weatherIcon(code, isDay = 1, background = 1) {
