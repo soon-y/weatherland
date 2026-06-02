@@ -52,7 +52,7 @@ export function Windvane({ windDirDebug, windSpdDebug, gustsSpdDebug, windDir, w
   }, [windDirDebug, windSpdDebug, gustsSpdDebug, windDir, windSpd, gustsSpd])
 
   return (
-    <group scale={param.groundRadius * 2} position={param.groundPos}>
+    <group scale={param.groundRadius * 1.7} position={param.groundPos}>
       <group dispose={null} scale={0.3} position={[0, 0.2, 0.4]}>
         <mesh
           castShadow
