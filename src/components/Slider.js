@@ -127,17 +127,27 @@ export default function Slider({ hourly, setIndex, index }) {
   if (!hourlyData) return
   return (
     <>
-      <button className={`cursor-pointer absolute top-[-8px] right-5 text-sm pb-4 ${isDay ? 'text-black' : 'text-white'}`}
-        style={{ display: index === time ? 'none' : 'block' }}
-        onClick={() => setIndex(time)}>
-        back to NOW
-      </button>
+      <div className="fixed left-4 bottom-4 select-none">
+        {hourlyData &&
+          <div className="text-xs font-semibold items-center justify-between bg-black/50 rounded-t-lg py-2 backdrop-blur-xl">
+            <div className="flex items-center gap-2 ml-2">
+              <div className={`w-2 h-2 rounded-full bg-white/40`} />
+              <span className={`mr-2 text-white`}>Actual</span>
+            </div>
+            <div className="flex items-center gap-2 ml-2">
+              <div className={`w-2 h-2 rounded-full outline bg-white/40 outline-white`} />
+              <span className={`mr-2 text-white`}>Feels like</span>
+            </div>
+          </div>
+        }
+        <div style={{ width: boxWidth, height: param.sliderHeight + 'px' }} />
+      </div>
 
       <div ref={ref} onScrollEnd={handleScroll}
         className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none`}>
         {hourlyData.map((el, i) => (
           <div key={i} onClick={() => setIndex(i)}
-            className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10 rounded-lg
+            className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10
               ${i < time ? "text-gray-300" : "text-white"}  ${i === index && "font-bold"} ${i === hover && "bg-white/10"}`}
             style={{ width: `${boxWidth}px`, height: param.sliderHeight + 'px' }}
           >
@@ -212,21 +222,16 @@ export default function Slider({ hourly, setIndex, index }) {
       </div>
 
       <div className="fixed left-4 bottom-4 select-none">
-        {hourlyData &&
-          <div className="text-sm font-semibold items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${isDay ? 'bg-black/40' : 'bg-white/40'}`} />
-              <span className={`mr-2 ${isDay ? 'text-black' : 'text-white'}`}>Actual</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full outline ${isDay ? 'bg-black/40 outline-black' : 'bg-white/40 outline-white'}`} />
-              <span className={`mr-2 ${isDay ? 'text-black' : 'text-white'}`}>Feels like</span>
-            </div>
-          </div>
-        }
-        <div className={`shadow-lg outline rounded-lg ${isDay ? 'outline-black/50' : 'outline-white/50'}`}
-        style={{ width: boxWidth, height: param.sliderHeight + 'px' }} />
+        <div className={`shadow-l2g outline rounded-lg duration-500 ${isDay ? 'outline-black/50' : 'outline-white/30'}`}
+          style={{ width: boxWidth, height: param.sliderHeight + 'px' }}
+        />
       </div>
+
+      <button className={`cursor-pointer absolute top-[-18px] right-5 text-sm text-white bg-black/40 py-1 px-3 rounded-full backdrop-blur-lg duration-500`}
+        style={{ display: index === time ? 'none' : 'block' }}
+        onClick={() => setIndex(time)}>
+        back to NOW
+      </button>
     </>
   )
 }
