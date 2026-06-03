@@ -45,9 +45,11 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
     }
 
     return {
-      left: `${left}%`,
+      left: `${left}%`, 
       width: `${width}%`,
-      background: `linear-gradient(to right, ${bgColor.replace(/,$/, '')})`
+      background: `linear-gradient(to right, ${bgColor.replace(/,$/, '')})`,
+      transition: 'left 300ms ease, width 1s ease',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
     }
   }
 
@@ -103,8 +105,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           ${!open ? 'opacity-100' : 'opacity-0'} 
           ${isDay ? 'text-black' : 'text-white'}`}
         >
-          <div className='grid grid-cols-[40px_1fr_40px] items-center justify-center'>
-            <p>{daily.temperature_2m_min[indexD]}°</p>
+          <div className='grid grid-cols-[40px_1fr_40px] gap-2 items-center justify-center'>
+            <p className='text-center'>{daily.temperature_2m_min[indexD]}°</p>
             <div className={`relative h-2 rounded-full`}>
               <div
                 className="absolute inset-0 rounded-full"
@@ -115,13 +117,14 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
                 style={currentTemp()}
               />
             </div>
-            <p className='text-right'>{daily.temperature_2m_max[indexD]}°</p>
+            <p className='text-center'>{daily.temperature_2m_max[indexD]}°</p>
           </div>
 
 
           <InfoBox title={'temperature'} isDay={isDay}
             info1={hourly.temperature_2m[index]} unit1={'°C'}
-            info2={'feels like ' + hourly.apparent_temperature[index]} unit2={'°C'}
+            info2={hourly.apparent_temperature[index]} unit2={'°C'}
+            info3={'feels like'}
           />
 
           <InfoBox title={'precipitation'} isDay={isDay}
