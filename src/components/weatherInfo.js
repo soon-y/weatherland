@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { airQuality, getWindDirectionArrow, uvIndex, visibilityInfo } from '@/lib/param'
+import { airQuality, getWindDirectionArrow, uvIndex, visibilityInfo, tempColorIndex, tempColorList } from '@/lib/param'
 import WeatherDetails from './weatherDetails'
 import WeatherIcon from './weatherIcon'
 import InfoBox from './weatherInfoBox'
@@ -29,6 +29,37 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
     setIndexD(tempIndex)
   }, [index])
 
+
+  const barRange = (min, max) => {
+    const globalMin = min
+    const globalMax = max
+    const range = globalMax - globalMin
+    const left = ((min - globalMin) / range) * 100
+    const width = ((max - min) / range) * 100
+    const minIndex = tempColorIndex(min)
+    const maxIndex = tempColorIndex(max)
+    let bgColor = ''
+
+    for (let i = minIndex; i <= maxIndex; i++) {
+      bgColor += tempColorList[i] + ','
+    }
+
+    return {
+      left: `${left}%`,
+      width: `${width}%`,
+      background: `linear-gradient(to right, ${bgColor.replace(/,$/, '')})`
+    }
+  }
+
+  const currentTemp = () => {
+    const range = daily.temperature_2m_max[indexD] - daily.temperature_2m_min[indexD]
+    const left = ((hourly.temperature_2m[index] - daily.temperature_2m_min[indexD]) / range) * 90
+
+    return {
+      left: `${left}%`, transition: 'left 1s ease'
+    }
+  }
+
   return (
     <div>
       <div
@@ -45,8 +76,11 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
         setOpen(true)
         clicked(true)
       }}
-        className={`fixed top-0 p-4 select-none grid text-white font-semibold cursor-pointer gap-1`}>
-        <div className={`flex gap-2 items-center h-8 duration-500 
+        className={`
+          fixed top-0 m-4 px-4 py-2 select-none grid text-white font-semibold cursor-pointer gap-1 rounded-xl duration-200
+          ${open ? "bg-white/0" : "bg-black/15 backdrop-blur-xl"}
+        `}>
+        <div className={`flex gap-2 items-center h-8 mb-2 duration-500 ${!open && 'justify-between'}
           ${isDay && !open ? 'text-black' : 'text-white'}`}
         >
           <p className='font-bold text-xl flex gap-2'>{
@@ -56,9 +90,9 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
               month: "short"
             }).replace(",", "")}
           </p>
-          <div className=''>
+          <div>
             {!open ?
-              <WeatherIcon code={daily.weather_code[indexD]} isDay={isDay} background={0} />
+              <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={false} />
               :
               <span className='text-xl'>{String(time).padStart(2, "0")}:00</span>
             }
@@ -69,10 +103,21 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           ${!open ? 'opacity-100' : 'opacity-0'} 
           ${isDay ? 'text-black' : 'text-white'}`}
         >
-          <InfoBox isDay={isDay}
-            info1={'L: ' + daily.temperature_2m_min[indexD]} unit1={'°C'}
-            info2={'H: ' + daily.temperature_2m_max[indexD]} unit2={'°C'}
-          />
+          <div className='grid grid-cols-[40px_1fr_40px] items-center justify-center'>
+            <p>{daily.temperature_2m_min[indexD]}°</p>
+            <div className={`relative h-2 rounded-full`}>
+              <div
+                className="absolute inset-0 rounded-full"
+                style={barRange(daily.temperature_2m_min[indexD], daily.temperature_2m_max[indexD])}
+              />
+              <div
+                className="absolute rounded-full h-2 aspect-square shadow-sm bg-white"
+                style={currentTemp()}
+              />
+            </div>
+            <p className='text-right'>{daily.temperature_2m_max[indexD]}°</p>
+          </div>
+
 
           <InfoBox title={'temperature'} isDay={isDay}
             info1={hourly.temperature_2m[index]} unit1={'°C'}

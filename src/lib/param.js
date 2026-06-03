@@ -45,7 +45,7 @@ export const param = {
   streetlightTargetPos: [0.2, -1, 0.5],
 }
 
-export function weatherIcon(code, isDay = 1, background = 1) {
+export function weatherIcon(code, isDay = 0, background = 1) {
   if (code === 0) return isDay ? <Sun /> : <Moon />
 
   if ([1, 2].includes(code)) return (isDay ?
