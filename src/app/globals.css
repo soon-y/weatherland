@@ -15,6 +15,7 @@
   --animate-raindrop: raindrop 2s infinite;
   --animate-snowdrop: snowdrop 2s infinite;
   --animate-snow: snow 2s infinite;
+  --animate-thunder: thunder 2s infinite;
 
   @keyframes wiggle {
     0%,
@@ -38,6 +39,19 @@
 
     80% {
       transform: translateX(0px) translateY(0px);
+      opacity: 100%;
+    }
+  }
+
+  @keyframes thunder {
+    0%,
+    100% {
+      transform: translateX(4px) translateY(-4px);
+      opacity: 0%;
+    }
+
+    80% {
+      transform: translateX(2px) translateY(-1px);
       opacity: 100%;
     }
   }
