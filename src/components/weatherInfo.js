@@ -5,6 +5,7 @@ import { airQuality, getWindDirectionArrow, uvIndex, visibilityInfo, tempColorIn
 import WeatherDetails from './weatherDetails'
 import WeatherIcon from './weatherIcon'
 import InfoBox from './weatherInfoBox'
+import { motion } from 'framer-motion'
 
 export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }) {
   const [open, setOpen] = useState(false)
@@ -29,7 +30,6 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
     setIndexD(tempIndex)
   }, [index])
 
-
   const barRange = (min, max) => {
     const globalMin = min
     const globalMax = max
@@ -45,7 +45,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
     }
 
     return {
-      left: `${left}%`, 
+      left: `${left}%`,
       width: `${width}%`,
       background: `linear-gradient(to right, ${bgColor.replace(/,$/, '')})`,
       transition: 'left 300ms ease, width 1s ease',
@@ -74,100 +74,101 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
         />
       </div>
 
-      <div onClick={() => {
+      <motion.div layout onClick={() => {
         setOpen(true)
         clicked(true)
       }}
         className={`
-          fixed top-0 m-4 px-4 py-2 select-none grid text-white font-semibold cursor-pointer gap-1 rounded-xl duration-200
-          ${open ? "bg-white/0" : "bg-black/15 backdrop-blur-xl"}
+          fixed top-0 m-4 px-4 py-2 select-none grid text-white font-semibold cursor-pointer gap-1 rounded-xl hover:outline
+          ${open ? "bg-white/0" : "bg-black/15 backdrop-blur-xl"} 
+          ${isDay ? "hover:outline-black/50" : "hover:outline-white/50"}
         `}>
-        <div className={`flex gap-2 items-center h-8 mb-2 duration-500 ${!open && 'justify-between'}
+          <div className={`flex gap-2 items-center h-8 mb-2 duration-500 ${!open && 'justify-between'}
           ${isDay && !open ? 'text-black' : 'text-white'}`}
-        >
-          <p className='font-bold text-xl flex gap-2'>{
-            new Date(hourly.time[index]).toLocaleDateString("en-GB", {
-              weekday: "short",
-              day: "numeric",
-              month: "short"
-            }).replace(",", "")}
-          </p>
-          <div>
-            {!open ?
-              <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={false} />
-              :
-              <span className='text-xl'>{String(time).padStart(2, "0")}:00</span>
-            }
+          >
+            <p className='font-bold text-xl flex gap-2'>{
+              new Date(hourly.time[index]).toLocaleDateString("en-GB", {
+                weekday: "short",
+                day: "numeric",
+                month: "short"
+              }).replace(",", "")}
+            </p>
+            <div>
+              {!open ?
+                <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={false} />
+                :
+                <span className='text-xl'>{String(time).padStart(2, "0")}:00</span>
+              }
+            </div>
           </div>
-        </div>
 
-        <div className={`grid gap-1 duration-500 
+          <div className={`grid gap-1 duration-500
           ${!open ? 'opacity-100' : 'opacity-0'} 
           ${isDay ? 'text-black' : 'text-white'}`}
-        >
-          <div className='grid grid-cols-[40px_1fr_40px] gap-2 items-center justify-center'>
-            <p className='text-center'>{daily.temperature_2m_min[indexD]}°</p>
-            <div className={`relative h-2 rounded-full`}>
-              <div
-                className="absolute inset-0 rounded-full"
-                style={barRange(daily.temperature_2m_min[indexD], daily.temperature_2m_max[indexD])}
-              />
-              <div
-                className="absolute rounded-full h-2 aspect-square shadow-sm bg-white"
-                style={currentTemp()}
-              />
+          >
+            <div className='grid grid-cols-[40px_1fr_40px] gap-2 items-center justify-center'>
+              <p className='text-center'>{daily.temperature_2m_min[indexD]}°</p>
+              <div className={`relative h-2 rounded-full`}>
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={barRange(daily.temperature_2m_min[indexD], daily.temperature_2m_max[indexD])}
+                />
+                <div
+                  className="absolute rounded-full h-2 aspect-square shadow-sm bg-white"
+                  style={currentTemp()}
+                />
+              </div>
+              <p className='text-center'>{daily.temperature_2m_max[indexD]}°</p>
             </div>
-            <p className='text-center'>{daily.temperature_2m_max[indexD]}°</p>
+
+
+            <InfoBox title={'temperature'} isDay={isDay}
+              info1={hourly.temperature_2m[index]} unit1={'°C'}
+              info2={hourly.apparent_temperature[index]} unit2={'°C'}
+              info3={'feels like'}
+            />
+
+            <InfoBox title={'precipitation'} isDay={isDay}
+              info1={rain[index]} unit1={'%'}
+              info2={hourly.precipitation[index]} unit2={'mm'}
+              condition={rain[index] > 0}
+            />
+            <InfoBox title={'wind'} isDay={isDay}
+              info1={windSpeed} unit1={'km/h'}
+              info2={getWindDirectionArrow(hourly.wind_direction_10m[index])}
+              condition={windSpeed > 15}
+            />
+            <InfoBox title={'uv index'} isDay={isDay}
+              info1={uvIndex(uv).state}
+              info2={uv}
+              condition={uv > 3}
+            />
+            <InfoBox title={'air quality'} isDay={isDay}
+              info1={airQuality(airIndex).state}
+              info2={airIndex}
+              condition={airIndex > 50}
+            />
+            <InfoBox title={'visibility'} isDay={isDay}
+              info1={visibilityInfo(visibility).state}
+              info2={Math.round(visibility / 1000)} unit2={'km'}
+              condition={visibility < 2}
+            />
+            <InfoBox title={'sunrise'} isDay={isDay}
+              info1={sunriseToday.split('T')[1]}
+              condition={now < sunriseTimeToday}
+            />
+
+            <InfoBox title={'sunset'} isDay={isDay}
+              info1={sunsetToday.split('T')[1]}
+              condition={sunriseTimeToday <= now && now < sunsetTimeToday}
+            />
+
+            <InfoBox title={'sunrise'} isDay={isDay}
+              info1={sunriseNext.split('T')[1]}
+              condition={sunsetTimeToday <= now}
+            />
           </div>
-
-
-          <InfoBox title={'temperature'} isDay={isDay}
-            info1={hourly.temperature_2m[index]} unit1={'°C'}
-            info2={hourly.apparent_temperature[index]} unit2={'°C'}
-            info3={'feels like'}
-          />
-
-          <InfoBox title={'precipitation'} isDay={isDay}
-            info1={rain[index]} unit1={'%'}
-            info2={hourly.precipitation[index]} unit2={'mm'}
-            condition={rain[index] > 0}
-          />
-          <InfoBox title={'wind'} isDay={isDay}
-            info1={windSpeed} unit1={'km/h'}
-            info2={getWindDirectionArrow(hourly.wind_direction_10m[index])}
-            condition={windSpeed > 15}
-          />
-          <InfoBox title={'uv index'} isDay={isDay}
-            info1={uvIndex(uv).state}
-            info2={uv}
-            condition={uv > 3}
-          />
-          <InfoBox title={'air quality'} isDay={isDay}
-            info1={airQuality(airIndex).state}
-            info2={airIndex}
-            condition={airIndex > 50}
-          />
-          <InfoBox title={'visibility'} isDay={isDay}
-            info1={visibilityInfo(visibility).state}
-            info2={Math.round(visibility / 1000)} unit2={'km'}
-            condition={visibility < 2}
-          />
-          <InfoBox title={'sunrise'} isDay={isDay}
-            info1={sunriseToday.split('T')[1]}
-            condition={now < sunriseTimeToday}
-          />
-
-          <InfoBox title={'sunset'} isDay={isDay}
-            info1={sunsetToday.split('T')[1]}
-            condition={sunriseTimeToday <= now && now < sunsetTimeToday}
-          />
-
-          <InfoBox title={'sunrise'} isDay={isDay}
-            info1={sunriseNext.split('T')[1]}
-            condition={sunsetTimeToday <= now}
-          />
-        </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
