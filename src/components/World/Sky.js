@@ -1,17 +1,15 @@
 import * as THREE from 'three'
 import { Sky } from "@react-three/drei"
 import { useRef } from "react"
-import { param, useIsDebug } from "@/lib/param"
+import { param } from "@/lib/param"
 import { useFrame } from "@react-three/fiber"
 import Light from "./light"
 
-export default function WorldSky({ progressDebug, sunProgress }) {
+export default function WorldSky({ progress }) {
   const currentProgress = useRef(0)
   const skyRayleigh = useRef(0)
   const skyRef = useRef()
   const sun = useRef(new THREE.Vector3())
-  const isDebug = useIsDebug()
-  const progress = isDebug ? progressDebug : sunProgress
 
   useFrame(() => {
     const sky = skyRef.current
@@ -43,7 +41,7 @@ export default function WorldSky({ progressDebug, sunProgress }) {
         mieDirectionalG={0.3}
       />
 
-      <Light progressDebug={progress} sunProgress={sunProgress} sun={sun.current} />
+      <Light progress={progress} sun={sun.current} />
     </>
   )
 }

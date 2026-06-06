@@ -5,10 +5,9 @@ import { param, useIsDebug } from "@/lib/param"
 import { useFrame } from "@react-three/fiber"
 import { Streetlight } from "./Streetlight"
 
-export default function Light({ progressDebug, sunProgress, sun }) {
+export default function Light({ progress, sun }) {
   const directionalLight = useRef()
   const isDebug = useIsDebug()
-  const progress = isDebug ? progressDebug : sunProgress
   const isDay = progress >= 0.25 && progress <= 0.75
   const intensity = useRef(0)
 
