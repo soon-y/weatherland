@@ -47,7 +47,7 @@ export default function Home() {
         {hourlyData ?
           <Slider hourly={hourlyData} setIndex={setIndex} index={index} />
           :
-          <div className={`${param.sliderStyles} animate-pulse opacity-10`} style={{ height: param.sliderHeight + 'px' }}>
+          <div className={`${param.sliderStyles} animate-pulse opacity-40`} style={{ height: param.sliderHeight + 'px' }}>
           </div>
         }
       </div>
@@ -56,11 +56,7 @@ export default function Home() {
         {(index != null && isFinite(index) && airData && hourlyData && dailyData) ?
           <WeatherInfo hourly={hourlyData} daily={dailyData} air={airData} moon={moonData} index={index} clicked={setInfoClicked} />
           :
-          <div className={`p-4 grid gap-2 `}>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={`animate-pulse w-30 h-5 rounded-sm bg-white opacity-30`}></div>
-            ))}
-          </div>
+          <div className={`m-4 animate-pulse w-50 h-40 rounded-sm bg-black/20`}></div>
         }
       </div>
 
