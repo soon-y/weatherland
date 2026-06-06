@@ -1,22 +1,17 @@
-import * as THREE from 'three'
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { param, useIsDebug } from "@/lib/param"
+import { param } from "@/lib/param"
+import trunkVertex from './shader/tree/trunkVertex.glsl'
 import vertexShader from './shader/tree/vertexShader.glsl'
 import fragmentShader from './shader/tree/fragmentShader.glsl'
 import { useGLTF } from '@react-three/drei'
 
-export default function Tree({ progressDebug, sunProgress, windDirDebug, windSpdDebug, gustsSpdDebug, windDir, windSpd, gustsSpd }) {
+export default function Tree({ progress, windDir, windSpd }) {
   const { nodes, materials } = useGLTF('models/tree.glb')
-  const isDebug = useIsDebug()
-  const progress = isDebug ? progressDebug : sunProgress
-  const windDirection = isDebug ? windDirDebug * (Math.PI / 180) - Math.PI * 0.4 : windDir * (Math.PI / 180) - Math.PI * 0.4
-  const windSpeed = isDebug ? windSpdDebug : windSpd
-  const gustsSpeed = isDebug ? gustsSpdDebug : gustsSpd
+
   const leafMaterialRef = useRef()
   const trunkMaterial = useMemo(() => materials.trunk.clone(), [materials])
   const trunkShaderRef = useRef()
-  const smoothWindDir = useRef(windDirection)
 
   const geometry = nodes.Cube.geometry
   geometry.setAttribute(
@@ -27,43 +22,37 @@ export default function Tree({ progressDebug, sunProgress, windDirDebug, windSpd
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uProgress: { value: progress },
-    uWindStrength: { value: windSpeed },
-    uWindDir: { value: windDirection },
+    uWindSpeed: { value: 0 },
+    uWindDir: { value: 0 },
   }), [])
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const time = state.clock.elapsedTime
-
-    smoothWindDir.current = THREE.MathUtils.lerp(
-      smoothWindDir.current,
-      windDirection,
-      delta * 2
-    )
 
     if (trunkShaderRef.current) {
       trunkShaderRef.current.uniforms.uTime.value = time
-      trunkShaderRef.current.uniforms.uWindStrength.value = windSpeed
-      trunkShaderRef.current.uniforms.uWindDir.value = smoothWindDir.current
+      trunkShaderRef.current.uniforms.uWindSpeed.value = windSpd.current
+      trunkShaderRef.current.uniforms.uWindDir.value = windDir.current
     }
 
     if (leafMaterialRef.current) {
       leafMaterialRef.current.uniforms.uTime.value = time
-      leafMaterialRef.current.uniforms.uWindStrength.value = windSpeed
       leafMaterialRef.current.uniforms.uProgress.value = progress
-      leafMaterialRef.current.uniforms.uWindDir.value = smoothWindDir.current
+      leafMaterialRef.current.uniforms.uWindSpeed.value = windSpd.current
+      leafMaterialRef.current.uniforms.uWindDir.value = windDir.current
     }
   })
 
   useEffect(() => {
     trunkMaterial.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = { value: 0 }
-      shader.uniforms.uWindStrength = { value: 0 }
+      shader.uniforms.uWindSpeed = { value: 0 }
       shader.uniforms.uWindDir = { value: 0 }
 
       shader.vertexShader =
         `
       uniform float uTime;
-      uniform float uWindStrength;
+      uniform float uWindSpeed;
       uniform float uWindDir;
 
       attribute vec4 windWeight;
@@ -72,30 +61,12 @@ export default function Tree({ progressDebug, sunProgress, windDirDebug, windSpd
       shader.vertexShader = shader.vertexShader.replace(
         '#include <begin_vertex>',
         `
-      #include <begin_vertex>
+        #include <begin_vertex>
 
-      float weight = windWeight.r;
-      
-      float branchWind =
-      sin(
-        uTime * 1.5 +
-        position.y * 0.25
-      )
-      * 0.05
-      * uWindStrength
-      * weight;
+        float weight = windWeight.r;
 
-    vec2 windDir = vec2(
-      cos(uWindDir),
-      sin(uWindDir)
-    );
-
-    transformed.x +=
-      windDir.x * branchWind;
-
-    transformed.z +=
-      windDir.y * branchWind;
-      `
+        ${trunkVertex}
+        `
       )
 
       trunkShaderRef.current = shader
@@ -103,7 +74,6 @@ export default function Tree({ progressDebug, sunProgress, windDirDebug, windSpd
 
     trunkMaterial.needsUpdate = true
   }, [trunkMaterial])
-
 
   return (
     <group position={param.groundPos}>

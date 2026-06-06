@@ -1,24 +1,16 @@
 import * as THREE from 'three'
 import { useEffect, useMemo, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { param, useIsDebug } from "@/lib/param"
+import { param } from "@/lib/param"
 import vertexShader from './shader/grass/vertexShader.glsl'
 import fragmentShader from './shader/grass/fragmentShader.glsl'
 
-export default function Grass({ progressDebug, sunProgress }) {
-  const isDebug = useIsDebug()
-  const progress = isDebug ? progressDebug : sunProgress
+export default function Grass({ progress, windDir, windSpd, lightDir }) {
   const count = 5000
   const grassRef = useRef()
   const bladesPerTuft = 4
   const total = count * bladesPerTuft
   const grassHeight = 0.3
-
-  const lightPos = new THREE.Vector3(...param.streetlightPos)
-  const targetPos = new THREE.Vector3(...param.streetlightTargetPos)
-
-  const dir = new THREE.Vector3()
-  dir.subVectors(targetPos, lightPos).normalize()
 
   const geometry = useMemo(() => {
     const g = new THREE.PlaneGeometry(0.12, grassHeight, 1, 6)
@@ -43,12 +35,13 @@ export default function Grass({ progressDebug, sunProgress }) {
       fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uWindDir: { value: new THREE.Vector2(1, 0) },
+        uWindDir: { value: new THREE.Vector2(Math.cos(windDir.current), -Math.sin(windDir.current)) },
+        uWindSpeed: { value: windSpd.current },
         uProgress: { value: 0 },
         uLightPos: { value: new THREE.Vector3(...param.streetlightPos) },
-        uLightDir: { value: dir },
-        uLightAngle: { value: 1.4 },
-        uLightPenumbra: { value: 0 },
+        uLightDir: { value: lightDir },
+        uLightAngle: { value: 2 },
+        uLightPenumbra: { value: 0.5 },
       },
       side: THREE.DoubleSide
     })
@@ -105,6 +98,8 @@ export default function Grass({ progressDebug, sunProgress }) {
   useFrame((state) => {
     grassRef.current.material.uniforms.uTime.value = state.clock.elapsedTime
     grassRef.current.material.uniforms.uProgress.value = progress
+    grassRef.current.material.uniforms.uWindDir.value = new THREE.Vector2(Math.cos(windDir.current), -Math.sin(windDir.current))
+    grassRef.current.material.uniforms.uWindSpeed.value = windSpd.current
   })
 
   return (

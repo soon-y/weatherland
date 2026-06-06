@@ -1,22 +1,22 @@
+import * as THREE from 'three'
 import { useMemo, useRef } from "react"
 import { useFrame } from "@react-three/fiber"
-import { param, useIsDebug } from "@/lib/param"
+import { param } from "@/lib/param"
 import vertexShader from './shader/pond/vertexShader.glsl'
 import fragmentShader from './shader/pond/fragmentShader.glsl'
 
-export default function Pond({ progressDebug, sunProgress, windDirDebug, windSpdDebug, gustsSpdDebug, windDir, windSpd, gustsSpd }) {
+export default function Pond({ progress, windDir, windSpd, lightDir }) {
   const materialRef = useRef()
-  const isDebug = useIsDebug()
-  const progress = isDebug ? progressDebug : sunProgress
-  const windDirection = isDebug ? windDirDebug * -(Math.PI / 180) - Math.PI * 0.5 : windDir * -(Math.PI / 180) - Math.PI * 0.5
-  const windSpeed = isDebug ? windSpdDebug : windSpd
-  const gustsSpeed = isDebug ? gustsSpdDebug : gustsSpd
 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
-    uWindDir: { value: windDirection },
-    uWindSpeed: { value: windSpeed },
-    uProgress: { value: progress },
+    uWindDir: { value: new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current)) },
+    uWindSpeed: { value: windSpd.current },
+    uProgress: { value: 0 },
+    uLightPos: { value: new THREE.Vector3(...param.streetlightPos) },
+    uLightDir: { value: lightDir },
+    uLightAngle: { value: 2 },
+    uLightPenumbra: { value: 0.5 },
   }), [])
 
   useFrame((_, delta) => {
@@ -24,14 +24,14 @@ export default function Pond({ progressDebug, sunProgress, windDirDebug, windSpd
     if (!mat) return
 
     mat.uniforms.uTime.value += delta
-    mat.uniforms.uWindDir.value = windDirection
-    mat.uniforms.uWindSpeed.value = windSpeed
     mat.uniforms.uProgress.value = progress
+    mat.uniforms.uWindDir.value = new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current))
+    mat.uniforms.uWindSpeed.value = windSpd.current
   })
 
   return (
     <mesh rotation-x={-Math.PI / 2} position={[0, param.groundPos[1], -1]}>
-      <circleGeometry args={[param.groundRadius * 1.8, 256, Math.PI, Math.PI]} />
+      <planeGeometry args={[param.groundRadius * 3.5, param.groundRadius * 3.5, 256, 256]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}

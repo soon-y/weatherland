@@ -2,6 +2,7 @@
 
 uniform float uTime;
 uniform vec2 uWindDir;
+uniform float uWindSpeed;
 
 attribute float aRandom;
 
@@ -23,22 +24,36 @@ void main() {
   float bend = pow(pos.y, 1.5);
   pos.z += bend * 0.2;
 
-  vec4 worldPos = modelMatrix * (instanceMatrix * vec4(pos, 1.0));
+  float heightFactor = pow(pos.y, 2.0);
+
+  vec4 instancePos = instanceMatrix * vec4(pos, 1.0);
+  vec4 worldPos = modelMatrix * instancePos;
+
+  float windCoord = dot(worldPos.xz, uWindDir);
+
+  float wave = sin(windCoord * 1.5 - uTime * 2.5);
+
+  float noise = snoise(vec3(worldPos.xz * 0.25, uTime * 0.4 + aRandom * 10.0));
+
+  float combined = wave + noise * 0.6;
+
+  float windStrength = clamp(uWindSpeed / 25.0, 0.0, 2.0);
+
+  float sway = combined * heightFactor * (0.08 + windStrength * 0.12);
+
+  pos.x += uWindDir.x * sway;
+  pos.z += uWindDir.y * sway;
+
+  instancePos = instanceMatrix * vec4(pos, 1.0);
+
+  worldPos = modelMatrix * instancePos;
   vWorldPos = worldPos.xyz;
+
   vec4 viewPos = viewMatrix * worldPos;
+
   vDepth = -viewPos.z;
+
   vNormal = normalize(mat3(modelMatrix * instanceMatrix) * normal);
-
-  float wind = dot(worldPos.xz, uWindDir);
-
-  float wave = sin(wind * 2.0 - uTime * 3.0);
-  float noise = snoise(vec3(worldPos.xz * 0.3, uTime * 0.5));
-
-  float combined = wave + noise * 0.5;
-
-  float heightFactor = pow(pos.y, 1.5);
-
-  //pos.x += combined * 0.4 * heightFactor;
 
   gl_Position = projectionMatrix * viewPos;
 }
