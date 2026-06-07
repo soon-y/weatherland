@@ -138,7 +138,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
 
           <InfoBox title={'wind'} isDay={isDay}
             info1={windSpeed} unit1={'km/h'}
-            info2={getWindDirectionArrow(hourly.wind_direction_10m[index])}
+            info2={getWindDirectionArrow(hourly.wind_direction_10m[index], 18)}
             condition={windSpeed > 15}
           />
 

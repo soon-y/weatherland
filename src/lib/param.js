@@ -15,6 +15,7 @@ import { Umbrella } from "@/components/icons/umbrella"
 import { UV } from "@/components/icons/uv"
 import { Air } from "@/components/icons/airQuality"
 import { usePathname } from "next/navigation"
+import { ArrowUp, ArrowUpRight, ArrowRight, ArrowDownRight, ArrowDown, ArrowDownLeft, ArrowLeft, ArrowUpLeft } from 'lucide-react'
 
 export const param = {
   days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -24,7 +25,7 @@ export const param = {
   weatherBarContainer: 'relative h-[28px]',
   weatherBar: 'absolute inset-y-2.5 h-2 w-full overflow-hidden bg-black/30',
   weatherBarDisc: 'absolute inset-y-2.5 rounded-full h-2 outline-2 outline-white/80 aspect-square bg-white/10',
-  weatherDesc: 'text-sm/4',
+  weatherDesc: 'text-sm/5',
   weatherBoxheight: 'h-[calc(100vh-72px)]',
   weatherBoxStyles: 'fixed top-18 w-full min-w-[340px] sm:px-[calc((100%-600px)/2)] sm:left-1/2 sm:-translate-x-1/2',
   rainColor: '#7bc1ff',
@@ -359,10 +360,16 @@ export function getWindLevel(speed) {
   return "Storm"
 }
 
-export function getWindDirectionArrow(deg) {
-  const directions = ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"]
-  return directions[Math.floor(((deg + 180) + 22.5) / 45) % 8]
+export function getWindDirectionArrow(deg, size = 12) {
+  const directions = [ ArrowUp, ArrowUpRight, ArrowRight, ArrowDownRight, ArrowDown, ArrowDownLeft, ArrowLeft, ArrowUpLeft]
+  const Icon = directions[Math.floor(((deg + 180) + 22.5) / 45) % 8]
+
+  return (
+    <Icon size={size} strokeWidth={2}/>
+  )
 }
+
+
 
 export function getWindDirection(deg) {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
