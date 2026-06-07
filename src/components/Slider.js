@@ -29,7 +29,7 @@ export default function Slider({ hourly, setIndex, index }) {
 
     const handleResize = () => {
       const windowWidth = window.innerWidth - 32
-      const divide = windowWidth > 1000 ? 10 : 6
+      const divide = windowWidth > 1000 ? 10 : windowWidth > 500 ? 6 : 4
       const box = windowWidth / divide
       setBoxWidth(box)
       setGraphWidth(box * 168)

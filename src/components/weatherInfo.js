@@ -106,8 +106,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           ${!open ? 'opacity-100' : 'opacity-0'} 
           ${isDay ? 'text-black' : 'text-white'}`}
         >
-          <div className='grid grid-cols-[40px_1fr_40px] gap-2 items-center justify-center'>
-            <p className='text-center'>{daily.temperature_2m_min[indexD]}°</p>
+          <div className='grid grid-cols-[32px_1fr_32px] gap-2 items-center justify-center'>
+            <p className='text-center text-sm'>{daily.temperature_2m_min[indexD]}°</p>
             <div className={`relative h-2 rounded-full`}>
               <div
                 className="absolute inset-0 rounded-full"
@@ -118,11 +118,14 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
                 style={currentTemp()}
               />
             </div>
-            <p className='text-center'>{daily.temperature_2m_max[indexD]}°</p>
+            <p className='text-center text-sm'>{daily.temperature_2m_max[indexD]}°</p>
           </div>
 
           <InfoBox title={'temperature'} isDay={isDay}
             info1={hourly.temperature_2m[index]} unit1={'°C'}
+          />
+
+          <InfoBox isDay={isDay}
             info2={hourly.apparent_temperature[index]} unit2={'°C'}
             info3={'feels like'}
           />

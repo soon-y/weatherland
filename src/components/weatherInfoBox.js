@@ -6,8 +6,8 @@ export default function InfoBox({title=null, info1, unit1 = '', info2 = '', unit
       {condition &&
         <div className="flex gap-2 items-center">
           {title && titleSvg(title, isDay)}
-          <p>{info1}<span className="text-xs"> {unit1}</span></p>
           {info3 && <p className="font-light">{info3}</p>}
+          <p>{info1}<span className="text-xs"> {unit1}</span></p>
           <p>{info2}<span className="text-xs"> {unit2}</span></p>
         </div>
       }
