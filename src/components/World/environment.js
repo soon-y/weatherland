@@ -7,21 +7,34 @@ import Grass from "./Grass"
 import { Windvane } from "./Windvane"
 import Pond from "./Pond"
 import Tree from "./Tree"
-import { useFrame } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
+import Rain from './rain'
+import Snow from './snow'
+import Mist from './mist'
 
 export default function Environment({ store, hourly, daily, index, indexD }) {
   const [sunProgress, setSunProgress] = useState(0)
   const [windDirH, setWindDirH] = useState(0)
   const [windSpdH, setWindSpdH] = useState(0)
   const [gustsSpdH, setGustsSpdH] = useState(0)
+  const [rainH, setRainH] = useState(0)
+  const [snowH, setSnowH] = useState(0)
+  const [visibilityH, setVisibility] = useState(0)
   const isDebug = useIsDebug()
   const timeRef = useRef(0)
   const windSpeedRef = useRef(0)
   const windDirRef = useRef(0)
   const finalWindSpd = useRef(0)
+  const finalWindDir = useRef(0)
 
-  const { progress } = useControls('Day', {
+  const { progress, visibility } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
+    visibility: { value: 100, min: 100, max: 10000, step: 100 },
+  }, { store })
+
+  const { rain, snow } = useControls('Precipitation', {
+    rain: { value: 10, min: 0, max: 10, step: 0.1 },
+    snow: { value: 0, min: 0, max: 10, step: 0.1 },
   }, { store })
 
   const { direction, speed } = useControls('Wind', {
@@ -59,6 +72,9 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     setWindDirH(hourly.wind_direction_10m[index])
     setWindSpdH(hourly.wind_speed_10m[index])
     setGustsSpdH(hourly.wind_gusts_10m[index])
+    setRainH(hourly.rain[index])
+    setSnowH(hourly.snowfall[index])
+    setVisibility(hourly.visibility[index])
   }, [index, indexD])
 
   useFrame((_, delta) => {
@@ -67,12 +83,25 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
     timeRef.current += delta
 
-    const targetDirection = isDebug ? direction * -(Math.PI / 180) - Math.PI * 0.5 : windDirH * -(Math.PI / 180) - Math.PI * 0.5
+    const targetDirection = isDebug
+      ? direction * -(Math.PI / 180) - Math.PI * 0.5
+      : windDirH * -(Math.PI / 180) - Math.PI * 0.5
+
     const targetSpeed = isDebug ? speed : windSpdH
+
     const targetGustSpeed = isDebug ? strength : gustsSpdH
 
-    windDirRef.current += (targetDirection - windDirRef.current) * 0.05
-    windSpeedRef.current += (targetSpeed - windSpeedRef.current) * 0.05
+    windDirRef.current = THREE.MathUtils.lerp(
+      windDirRef.current,
+      targetDirection,
+      delta * 3
+    )
+
+    windSpeedRef.current = THREE.MathUtils.lerp(
+      windSpeedRef.current,
+      targetSpeed,
+      delta * 3
+    )
 
     const cycleTime = timeRef.current % gustCycle
 
@@ -85,7 +114,8 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     finalWindSpd.current = windSpeedRef.current + gustEffect
 
     const sway = Math.sin(timeRef.current * 2) * (finalWindSpd.current * 0.001)
-    windDirRef.current = targetDirection + sway
+
+    finalWindDir.current = windDirRef.current + sway
   })
 
   const lightPos = new THREE.Vector3(...param.streetlightPos)
@@ -97,10 +127,12 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   return (
     <>
       <WorldSky progress={isDebug ? progress : sunProgress} />
-      <Windvane windDir={windDirRef} windSpd={finalWindSpd} />
-      <Grass progress={isDebug ? progress : sunProgress} windDir={windDirRef} windSpd={finalWindSpd} lightDir={lightDir}/>
-      <Pond progress={isDebug ? progress : sunProgress} windDir={windDirRef} windSpd={finalWindSpd} lightDir={lightDir}/>
-      <Tree progress={isDebug ? progress : sunProgress} windDir={windDirRef} windSpd={finalWindSpd} />
+      <Windvane windDir={finalWindDir} windSpd={finalWindSpd} />
+      <Grass progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} />
+      <Pond progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} precipitation={isDebug ? rain : rainH} />
+      <Tree progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} />
+      <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
+      <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
     </>
   )
 }
