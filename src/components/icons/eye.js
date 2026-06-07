@@ -1,5 +1,5 @@
 export function Eye({ isDay }) {
-  const style = { fill: isDay ? '#2c2c2c' : '#fff' }
+  const style = { fill: isDay ? '#2c2c2c' : '#fff', opacity: 0.8 }
 
   return (
     <svg
