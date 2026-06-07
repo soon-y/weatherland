@@ -30,16 +30,11 @@ void main() {
   vec4 worldPos = modelMatrix * instancePos;
 
   float windCoord = dot(worldPos.xz, uWindDir);
-
   float wave = sin(windCoord * 1.5 - uTime * 2.5);
-
   float noise = snoise(vec3(worldPos.xz * 0.25, uTime * 0.4 + aRandom * 10.0));
-
   float combined = wave + noise * 0.6;
-
   float windStrength = clamp(uWindSpeed / 25.0, 0.0, 2.0);
-
-  float sway = combined * heightFactor * (0.08 + windStrength * 0.12);
+  float sway = combined * heightFactor * windStrength * 0.2;
 
   pos.x += uWindDir.x * sway;
   pos.z += uWindDir.y * sway;
