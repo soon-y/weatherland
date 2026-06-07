@@ -2,89 +2,159 @@ import { useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const vertexShader = `
-varying vec2 vUv;
+const MAX_COUNT = 1000
 
-void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`
-
-const fragmentShader = `
-uniform float uStrength;
-uniform float uTime;
-
-varying vec2 vUv;
-
-float random(vec2 st){
-  return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-}
-
-void main() {
-  vec2 uv = vUv;
-
-  float n =
-    random(uv * 20.0 + uTime * 0.02) * 0.5 +
-    random(uv * 10.0 - uTime * 0.01) * 0.5;
-
-  float alpha = n * uStrength * 0.15;
-
-  gl_FragColor = vec4(vec3(0.85, 0.88, 0.9), alpha);
-}
-`
-
-export default function MistOverlay({ visibility, progress }) {
-  const meshRef = useRef()
-  const matRef = useRef()
-
+export default function Mist({ visibility, windDir, windSpd, isDay }) {
+  const pointsRef = useRef()
   const { camera } = useThree()
 
-  const uniforms = useMemo(
-    () => ({
-      uStrength: { value: 0 },
-      uTime: { value: 0 }
-    }),
+  const positions = useMemo(
+    () => new Float32Array(MAX_COUNT * 3),
+    []
+  )
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: MAX_COUNT }, () => ({
+        x: 0,
+        y: Math.random() * 8,
+        z: 0,
+        vx: (Math.random() - 0.5) * 0.2,
+        vz: (Math.random() - 0.5) * 0.2
+      })),
+    []
+  )
+
+  const forward = useMemo(
+    () => new THREE.Vector3(),
     []
   )
 
   useFrame((_, delta) => {
-    if (!meshRef.current || !matRef.current) return
+    if (!pointsRef.current) return
 
-    matRef.current.uniforms.uTime.value += delta
-
-    const mistStrength = THREE.MathUtils.clamp(
-      (3000 - visibility) / 3000,
+    const mistAmount = THREE.MathUtils.clamp(
+      (5000 - visibility) / 5000,
       0,
       1
     )
 
-    matRef.current.uniforms.uStrength.value = mistStrength
-
-    meshRef.current.position.copy(camera.position)
-
-    const forward = new THREE.Vector3()
-    camera.getWorldDirection(forward)
-
-    meshRef.current.position.add(
-      forward.multiplyScalar(2)
+    const visibleCount = Math.floor(
+      mistAmount * MAX_COUNT
     )
 
-    meshRef.current.quaternion.copy(camera.quaternion)
+    camera.getWorldDirection(forward)
+
+    const dynamicArea = Math.max(
+      200,
+      camera.position.y * 8
+    )
+
+    const centerX =
+      camera.position.x +
+      forward.x * dynamicArea * 0.3
+
+    const centerZ =
+      camera.position.z +
+      forward.z * dynamicArea * 0.3
+
+    const wind = Math.min(
+      windSpd.current,
+      15
+    )
+
+    const windX =
+      Math.cos(windDir.current) *
+      wind *
+      0.03
+
+    const windZ =
+      Math.sin(windDir.current) *
+      wind *
+      0.03
+
+    for (let i = 0; i < visibleCount; i++) {
+      const p = particles[i]
+
+      if (
+        p.x === 0 &&
+        p.z === 0
+      ) {
+        p.x =
+          centerX +
+          (Math.random() - 0.5) *
+            dynamicArea
+
+        p.z =
+          centerZ +
+          (Math.random() - 0.5) *
+            dynamicArea
+      }
+
+      p.x += (p.vx + windX) * delta
+      p.z += (p.vz + windZ) * delta
+
+      const dx = p.x - centerX
+      const dz = p.z - centerZ
+
+      if (
+        Math.abs(dx) >
+          dynamicArea * 0.5 ||
+        Math.abs(dz) >
+          dynamicArea * 0.5
+      ) {
+        p.x =
+          centerX +
+          (Math.random() - 0.5) *
+            dynamicArea
+
+        p.z =
+          centerZ +
+          (Math.random() - 0.5) *
+            dynamicArea
+
+        p.y = Math.random() * 8
+      }
+
+      positions[i * 3] = p.x
+      positions[i * 3 + 1] = p.y
+      positions[i * 3 + 2] = p.z
+    }
+
+    pointsRef.current.geometry.setDrawRange(
+      0,
+      visibleCount
+    )
+
+    pointsRef.current.geometry.attributes.position.needsUpdate =
+      true
   })
 
   return (
-    <mesh ref={meshRef} renderOrder={9999}>
-      <planeGeometry args={[4, 4]} />
-      <shaderMaterial
-        ref={matRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
+    <points
+      ref={pointsRef}
+      frustumCulled={false}
+    >
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+
+      <pointsMaterial
+        size={8}
+        color={
+          isDay
+            ? '#dfe5e4'
+            : '#2f3740'
+        }
         transparent
+        opacity={0.04}
         depthWrite={false}
-        depthTest={false}
       />
-    </mesh>
+    </points>
   )
 }
