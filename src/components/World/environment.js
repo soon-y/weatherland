@@ -7,7 +7,7 @@ import Grass from "./Grass"
 import { Windvane } from "./Windvane"
 import Pond from "./Pond"
 import Tree from "./Tree"
-import { useFrame, useThree } from "@react-three/fiber"
+import { useFrame } from "@react-three/fiber"
 import Rain from './rain'
 import Snow from './snow'
 import Mist from './mist'
@@ -20,7 +20,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const [gustsSpdH, setGustsSpdH] = useState(0)
   const [rainH, setRainH] = useState(0)
   const [snowH, setSnowH] = useState(0)
-  const [visibilityH, setVisibility] = useState(0)
+  const [visibilityH, setVisibility] = useState(5000)
   const isDebug = useIsDebug()
   const timeRef = useRef(0)
   const windSpeedRef = useRef(0)
@@ -30,7 +30,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
   const { progress, visibility } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
-    visibility: { value: 100, min: 100, max: 5000, step: 100 },
+    visibility: { value: 5000, min: 100, max: 5000, step: 100 },
   }, { store })
 
   const { rain, snow } = useControls('Precipitation', {
