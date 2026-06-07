@@ -1,159 +1,143 @@
 import { useMemo, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
+import vertexShader from './shader/mist/vertexShader.glsl'
+import fragmentShader from './shader/mist/fragmentShader.glsl'
+
 const MAX_COUNT = 1000
+const center = [0, 0, 0]
+const area = 17
+const height = 17
 
-export default function Mist({ visibility, windDir, windSpd, isDay }) {
+export default function Mist({ visibility, isDay }) {
   const pointsRef = useRef()
-  const { camera } = useThree()
+  const materialRef = useRef()
 
-  const positions = useMemo(
-    () => new Float32Array(MAX_COUNT * 3),
-    []
-  )
+  const positions = useMemo(() => {
+    const arr = new Float32Array(MAX_COUNT * 3)
+
+    for (let i = 0; i < MAX_COUNT; i++) {
+      const theta = Math.random() * Math.PI * 2
+
+      const phi = Math.acos(2 * Math.random() - 1)
+
+      const radius = Math.cbrt(Math.random()) * area
+
+      arr[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
+      arr[i * 3 + 1] = radius * Math.cos(phi)
+      arr[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta)
+    }
+
+    return arr
+  }, [area])
+
+  const scales = useMemo(() => {
+    const arr = new Float32Array(MAX_COUNT)
+
+    for (let i = 0; i < MAX_COUNT; i++) {
+      arr[i] = 15 + Math.random() * 25
+    }
+
+    return arr
+  }, [])
 
   const particles = useMemo(
     () =>
-      Array.from({ length: MAX_COUNT }, () => ({
-        x: 0,
-        y: Math.random() * 8,
-        z: 0,
-        vx: (Math.random() - 0.5) * 0.2,
-        vz: (Math.random() - 0.5) * 0.2
-      })),
+      Array.from(
+        { length: MAX_COUNT },
+        () => ({
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.04,
+          vz: (Math.random() - 0.5) * 0.25
+        })
+      ),
     []
   )
 
-  const forward = useMemo(
-    () => new THREE.Vector3(),
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uStrength: { value: 0 },
+      uIsDay: { value: isDay ? 1 : 0 },
+      uArea: { value: area }
+    }),
     []
   )
 
   useFrame((_, delta) => {
-    if (!pointsRef.current) return
-
-    const mistAmount = THREE.MathUtils.clamp(
-      (5000 - visibility) / 5000,
-      0,
-      1
+    if (
+      !pointsRef.current ||
+      !materialRef.current
     )
+      return
 
-    const visibleCount = Math.floor(
-      mistAmount * MAX_COUNT
-    )
+    materialRef.current.uniforms.uTime.value += delta
+    materialRef.current.uniforms.uIsDay.value = isDay ? 1 : 0
+    materialRef.current.uniforms.uStrength.value = Math.pow(THREE.MathUtils.clamp(1 - visibility / 5000, 0, 1), 2)
 
-    camera.getWorldDirection(forward)
+    for (let i = 0; i < MAX_COUNT; i++) {
+      const idx = i * 3
 
-    const dynamicArea = Math.max(
-      200,
-      camera.position.y * 8
-    )
-
-    const centerX =
-      camera.position.x +
-      forward.x * dynamicArea * 0.3
-
-    const centerZ =
-      camera.position.z +
-      forward.z * dynamicArea * 0.3
-
-    const wind = Math.min(
-      windSpd.current,
-      15
-    )
-
-    const windX =
-      Math.cos(windDir.current) *
-      wind *
-      0.03
-
-    const windZ =
-      Math.sin(windDir.current) *
-      wind *
-      0.03
-
-    for (let i = 0; i < visibleCount; i++) {
-      const p = particles[i]
+      positions[idx] += particles[i].vx * delta
+      positions[idx + 1] += particles[i].vy * delta
+      positions[idx + 2] += particles[i].vz * delta
 
       if (
-        p.x === 0 &&
-        p.z === 0
+        positions[idx + 1] > height * 0.5 ||
+        positions[idx + 1] < -height * 0.5
       ) {
-        p.x =
-          centerX +
-          (Math.random() - 0.5) *
-            dynamicArea
-
-        p.z =
-          centerZ +
-          (Math.random() - 0.5) *
-            dynamicArea
+        particles[i].vy *= -1
       }
 
-      p.x += (p.vx + windX) * delta
-      p.z += (p.vz + windZ) * delta
+      const x = positions[idx]
+      const z = positions[idx + 2]
 
-      const dx = p.x - centerX
-      const dz = p.z - centerZ
+      const distance = Math.sqrt(x * x + z * z)
 
-      if (
-        Math.abs(dx) >
-          dynamicArea * 0.5 ||
-        Math.abs(dz) >
-          dynamicArea * 0.5
-      ) {
-        p.x =
-          centerX +
-          (Math.random() - 0.5) *
-            dynamicArea
+      if (distance > area) {
+        const angle = Math.random() * Math.PI * 2
+        const radius = Math.random() * area
 
-        p.z =
-          centerZ +
-          (Math.random() - 0.5) *
-            dynamicArea
-
-        p.y = Math.random() * 8
+        positions[idx] = Math.cos(angle) * radius
+        positions[idx + 1] = (Math.random() - 0.5) * height
+        positions[idx + 2] = Math.sin(angle) * radius
       }
-
-      positions[i * 3] = p.x
-      positions[i * 3 + 1] = p.y
-      positions[i * 3 + 2] = p.z
     }
-
-    pointsRef.current.geometry.setDrawRange(
-      0,
-      visibleCount
-    )
-
-    pointsRef.current.geometry.attributes.position.needsUpdate =
-      true
+    pointsRef.current.geometry.attributes.position.needsUpdate = true
   })
 
   return (
     <points
       ref={pointsRef}
+      position={center}
       frustumCulled={false}
+      renderOrder={1000}
     >
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
           array={positions}
+          count={MAX_COUNT}
           itemSize={3}
+        />
+
+        <bufferAttribute
+          attach="attributes-aScale"
+          array={scales}
+          count={MAX_COUNT}
+          itemSize={1}
         />
       </bufferGeometry>
 
-      <pointsMaterial
-        size={8}
-        color={
-          isDay
-            ? '#dfe5e4'
-            : '#2f3740'
-        }
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
         transparent
-        opacity={0.04}
         depthWrite={false}
+        depthTest={false}
       />
     </points>
   )

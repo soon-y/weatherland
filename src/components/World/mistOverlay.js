@@ -14,6 +14,7 @@ void main() {
 const fragmentShader = `
 uniform float uStrength;
 uniform float uTime;
+uniform float uIsDay;
 
 varying vec2 vUv;
 
@@ -28,13 +29,18 @@ void main() {
     random(uv * 20.0 + uTime * 0.02) * 0.5 +
     random(uv * 10.0 - uTime * 0.01) * 0.5;
 
-  float alpha = n * uStrength * 0.15;
+  float alpha = n * uStrength * 0.5;
 
-  gl_FragColor = vec4(vec3(0.85, 0.88, 0.9), alpha);
+vec3 dayColor = vec3(0.65, 0.68, 0.72);
+vec3 nightColor = vec3(0.03, 0.04, 0.06);
+
+  vec3 color = mix(nightColor, dayColor, uIsDay);
+
+  gl_FragColor = vec4(color, alpha);
 }
 `
 
-export default function MistOverlay({ visibility, progress }) {
+export default function MistOverlay({ visibility, isDay }) {
   const meshRef = useRef()
   const matRef = useRef()
 
@@ -43,7 +49,8 @@ export default function MistOverlay({ visibility, progress }) {
   const uniforms = useMemo(
     () => ({
       uStrength: { value: 0 },
-      uTime: { value: 0 }
+      uTime: { value: 0 },
+      uIsDay: { value: 0 }
     }),
     []
   )
@@ -52,6 +59,7 @@ export default function MistOverlay({ visibility, progress }) {
     if (!meshRef.current || !matRef.current) return
 
     matRef.current.uniforms.uTime.value += delta
+    matRef.current.uniforms.uIsDay.value = isDay ? 1 : 0
 
     const mistStrength = THREE.MathUtils.clamp(
       (3000 - visibility) / 3000,

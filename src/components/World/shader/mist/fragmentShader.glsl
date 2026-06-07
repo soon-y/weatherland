@@ -1,31 +1,25 @@
-#pragma glslify: snoise = require('glsl-noise/simplex/3d')
-
-uniform float uTime;
 uniform float uStrength;
+uniform float uIsDay;
 
-varying vec2 vUv;
+varying float vEdgeFade;
 
 void main() {
-  float n =
-    snoise(
-      vec3(
-        vUv * 3.0,
-        uTime * 0.03
-      )
-    );
+  vec2 uv = gl_PointCoord * 2.0 - 1.0;
 
-  n = n * 0.5 + 0.5;
+  float d = length(uv);
 
-  float alpha =
-    smoothstep(
-      0.4,
-      0.8,
-      n
-    ) * uStrength;
+  float circle = 1.0 - smoothstep(0.0, 1.0, d);
 
-  gl_FragColor =
-    vec4(
-      vec3(0.85),
-      alpha
-    );
+  circle = pow(circle, 2.5);
+
+  vec3 dayColor = vec3(0.85, 0.88, 0.90);
+  vec3 nightColor = vec3(0.20, 0.24, 0.30);
+  vec3 color = mix(nightColor, dayColor, uIsDay);
+
+  float alpha = circle * vEdgeFade * uStrength * 0.35;
+
+  if(alpha < 0.001)
+    discard;
+
+  gl_FragColor = vec4(color, alpha);
 }

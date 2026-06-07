@@ -30,11 +30,11 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
   const { progress, visibility } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
-    visibility: { value: 100, min: 100, max: 10000, step: 100 },
+    visibility: { value: 100, min: 100, max: 5000, step: 100 },
   }, { store })
 
   const { rain, snow } = useControls('Precipitation', {
-    rain: { value: 10, min: 0, max: 10, step: 0.1 },
+    rain: { value: 0, min: 0, max: 10, step: 0.1 },
     snow: { value: 0, min: 0, max: 10, step: 0.1 },
   }, { store })
 
@@ -134,7 +134,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
       <Tree progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} />
       <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <Mist windDir={finalWindDir} windSpd={finalWindSpd} visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
+      <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <MistOverlay visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
     </>
   )
