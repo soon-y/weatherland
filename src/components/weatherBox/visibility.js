@@ -3,7 +3,8 @@ import { visibilityInfo, param } from "@/lib/param"
 import BoxTitle from "./boxTitle"
 
 export default function Visibility({ hourly, index, setDisplay, setBoxClicked }) {
-  const current = Math.floor((hourly.visibility[index]) / 1000)
+  const visibility = hourly.visibility[index] / 1000
+  const current = visibility < 10 ? visibility : Math.round(visibility)
   const title = 'visibility'
 
   return (

@@ -135,26 +135,31 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
             info2={hourly.precipitation[index]} unit2={'mm'}
             condition={rain[index] > 0}
           />
+
           <InfoBox title={'wind'} isDay={isDay}
             info1={windSpeed} unit1={'km/h'}
             info2={getWindDirectionArrow(hourly.wind_direction_10m[index])}
             condition={windSpeed > 15}
           />
+
           <InfoBox title={'uv index'} isDay={isDay}
             info1={uvIndex(uv).state}
             info2={uv}
             condition={uv > 3}
           />
+
           <InfoBox title={'air quality'} isDay={isDay}
             info1={airQuality(airIndex).state}
             info2={airIndex}
             condition={airIndex > 50}
           />
+
           <InfoBox title={'visibility'} isDay={isDay}
-            info1={visibilityInfo(visibility).state}
+            info1={visibilityInfo(visibility / 1000).state}
             info2={Math.round(visibility / 1000)} unit2={'km'}
-            condition={visibility < 2}
+            condition={visibility < 10000}
           />
+          
           <InfoBox title={'sunrise'} isDay={isDay}
             info1={sunriseToday.split('T')[1]}
             condition={now < sunriseTimeToday}
