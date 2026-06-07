@@ -56,7 +56,7 @@ export default function Home() {
         {(index != null && isFinite(index) && airData && hourlyData && dailyData) ?
           <WeatherInfo hourly={hourlyData} daily={dailyData} air={airData} moon={moonData} index={index} clicked={setInfoClicked} />
           :
-          <div className={`m-4 animate-pulse w-50 h-40 rounded-sm bg-black/20`}></div>
+          <div className={`m-4 animate-pulse w-42 h-42 rounded-xl bg-black/20`}></div>
         }
       </div>
 
