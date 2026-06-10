@@ -11,7 +11,7 @@ export default function WeatherIcon({ code, isDay = 1, probability, background =
     <>
       <div className={`relative flex items-center`} style={{ aspectRatio: 0.75 }}>
         {weatherIcon(code, background)}
-        {isRainy && probability &&
+        {isRainy && probability !== null &&
           <div className="w-full h-full absolute top-0 flex justify-center leading-none items-end font-bold text-xs"
             style={{ color: !background && isDay? 'black': tempColorList[0] }}>
             {probability}%
