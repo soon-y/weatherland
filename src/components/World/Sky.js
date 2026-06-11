@@ -5,7 +5,7 @@ import { param } from "@/lib/param"
 import { useFrame } from "@react-three/fiber"
 import Light from "./light"
 
-export default function WorldSky({ progress }) {
+export default function WorldSky({ progress, snowDepth }) {
   const currentProgress = useRef(0)
   const skyRayleigh = useRef(0)
   const skyRef = useRef()
@@ -41,7 +41,7 @@ export default function WorldSky({ progress }) {
         mieDirectionalG={0.3}
       />
 
-      <Light progress={progress} sun={sun.current} />
+      <Light progress={progress} sun={sun.current} snowDepth={snowDepth}/>
     </>
   )
 }

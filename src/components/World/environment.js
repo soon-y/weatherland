@@ -21,6 +21,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const [rainH, setRainH] = useState(0)
   const [snowH, setSnowH] = useState(0)
   const [visibilityH, setVisibility] = useState(5000)
+  const [snowDepth, setSnowDepth] = useState(0)
   const isDebug = useIsDebug()
   const timeRef = useRef(0)
   const windSpeedRef = useRef(0)
@@ -47,6 +48,10 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     strength: { value: 5, min: 0, max: 100, step: 1 },
     period: { value: 20, min: 5, max: 60, step: 1 },
     duration: { value: 3, min: 1, max: 10, step: 1 },
+  }, { store })
+
+  const { depth } = useControls('Snow', {
+    depth: { value: 0.01, min: 0, max: 0.5, step: 0.01 },
   }, { store })
 
   useEffect(() => {
@@ -76,6 +81,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     setRainH(hourly.rain[index])
     setSnowH(hourly.snowfall[index])
     setVisibility(hourly.visibility[index])
+    setSnowDepth(hourly.snow_depth[index])
   }, [index, indexD])
 
   useFrame((_, delta) => {
@@ -127,11 +133,11 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
   return (
     <>
-      <WorldSky progress={isDebug ? progress : sunProgress} />
-      <Windvane windDir={finalWindDir} windSpd={finalWindSpd} />
+      <WorldSky progress={isDebug ? progress : sunProgress} snowDepth={isDebug ? depth : snowDepth}/>
+      <Windvane windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth}/>
       <Grass progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} />
       <Pond progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} precipitation={isDebug ? rain : rainH} />
-      <Tree progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} />
+      <Tree progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth}/>
       <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />

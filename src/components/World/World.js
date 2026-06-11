@@ -44,7 +44,7 @@ function World({ hourly, daily, index }) {
 
       <group position={param.worldPos}>
         <Environment store={levaStore} hourly={hourly} daily={daily} index={index} indexD={indexD} />
-        <WorldGround />
+        <WorldGround store={levaStore} hourly={hourly} index={index} />
       </group>
     </Canvas>
   </>
@@ -63,7 +63,7 @@ function CameraController() {
 
         camera.position.set(
           param.camPos[0] * scale,
-          param.camPos[1] * scale,
+          param.camPos[1],
           param.camPos[2] * scale,)
       } else {
         camera.position.set(...param.camPos)
