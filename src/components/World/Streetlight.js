@@ -108,6 +108,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.057, 0]}
           scale={[0.097, 0.033, 0.097]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowHeadBar}
@@ -117,6 +118,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.881, 0.099]}
           scale={[-0.05, -0.039, -0.05]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowHead}
@@ -126,6 +128,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0.052, 0.848, 0.188]}
           scale={[-0.05, -0.039, -0.05]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowHead1}
@@ -135,6 +138,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.884, 0.188]}
           scale={[-0.047, -0.037, -0.047]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowHead2}
@@ -144,6 +148,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.895, 0.188]}
           scale={[-0.05, -0.039, -0.05]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowHead3}
@@ -153,6 +158,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.919, 0.188]}
           scale={[-0.05, -0.039, -0.05]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowPillar}
@@ -162,6 +168,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.893, -0.001]}
           scale={[0.078, 0.022, 0.078]}
+          visible={snowDepth >= 0.01}
         />
         <mesh
           ref={snowPillarTop}
@@ -171,6 +178,7 @@ export function Streetlight({ progress, snowDepth }) {
           material={materials.snow}
           position={[0, 0.902, 0]}
           scale={[0.068, 0.022, 0.068]}
+          visible={snowDepth >= 0.01}
         />
 
         <mesh
