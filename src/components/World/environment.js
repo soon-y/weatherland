@@ -51,7 +51,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   }, { store })
 
   const { depth } = useControls('Snow', {
-    depth: { value: 0.01, min: 0, max: 0.5, step: 0.01 },
+    depth: { value: 0, min: 0, max: 0.5, step: 0.01 },
   }, { store })
 
   useEffect(() => {
