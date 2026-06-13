@@ -3,6 +3,7 @@
 uniform float uTime;
 uniform vec2 uWindDir;
 uniform float uWindSpeed;
+uniform float uSnowDepth;
 
 attribute float aRandom;
 
@@ -29,12 +30,14 @@ void main() {
   vec4 instancePos = instanceMatrix * vec4(pos, 1.0);
   vec4 worldPos = modelMatrix * instancePos;
 
+  float snowDamping = 1.0 - smoothstep(0.05, 0.1, uSnowDepth);
+
   float windCoord = dot(worldPos.xz, uWindDir);
   float wave = sin(windCoord * 1.5 - uTime * 2.5);
   float noise = snoise(vec3(worldPos.xz * 0.25, uTime * 0.4 + aRandom * 10.0));
   float combined = wave + noise * 0.6;
   float windStrength = clamp(uWindSpeed / 25.0, 0.0, 2.0);
-  float sway = combined * heightFactor * windStrength * 0.2;
+  float sway = combined * heightFactor * windStrength * 0.2 * snowDamping;
 
   pos.x += uWindDir.x * sway;
   pos.z += uWindDir.y * sway;
