@@ -1,11 +1,21 @@
+vec2 windDirection = vec2(cos(uWindDir), -sin(uWindDir));
+
 float windStrength = smoothstep(0.0, 50.0, uWindSpeed);
 
-float branchWind = sin(uTime * (1.0 +
-  windStrength) +
-  position.y * 0.25) * 0.06 * windStrength * weight;
+float sway = sin(uTime * 1.2) *
+  0.35 *
+  windStrength;
 
-vec2 windDir = vec2(cos(uWindDir), -sin(uWindDir));
+float secondarySway = sin(uTime * 0.65) *
+  0.15 *
+  windStrength;
 
-transformed.x += windDir.x * branchWind;
+float lean = 0.25 *
+  windStrength;
 
-transformed.z += windDir.y * branchWind;
+float motion = (sway + secondarySway + lean) *
+  weight;
+
+transformed.x += windDirection.x * motion;
+
+transformed.z += windDirection.y * motion;

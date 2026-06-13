@@ -16,13 +16,24 @@ void main() {
 
     float windStrength = smoothstep(0.0, 50.0, uWindSpeed);
 
-    float branchWind = sin(uTime * (1.0 +
-        windStrength) +
-        position.y * 0.25) * 0.08 * windStrength;
+    float sway = sin(uTime * 1.2) *
+        0.35 *
+        windStrength;
 
-    transformed.x += windDirection.x * branchWind;
+    float secondarySway = sin(uTime * 0.65) *
+        0.15 *
+        windStrength;
 
-    transformed.z += windDirection.y * branchWind;
+    float lean = 0.25 *
+        windStrength;
+
+    float motion = sway +
+        secondarySway +
+        lean;
+
+    transformed.x += windDirection.x * motion;
+
+    transformed.z += windDirection.y * motion;
 
     gl_Position = projectionMatrix *
         modelViewMatrix *
