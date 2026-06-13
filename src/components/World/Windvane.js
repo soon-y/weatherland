@@ -38,48 +38,48 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
     const targetScale = THREE.MathUtils.mapLinear(snowDepth, 0, 1.5, 0, 1)
 
     snowDir.current.scale.z = THREE.MathUtils.lerp(
-        snowDir.current.scale.z,
-        targetScale,
-        0.05
-      )
+      snowDir.current.scale.z,
+      targetScale,
+      0.05
+    )
 
     snowDirBar.current.scale.z = THREE.MathUtils.lerp(
-        snowDirBar.current.scale.z,
-        targetScale,
-        0.05
-      )
+      snowDirBar.current.scale.z,
+      targetScale,
+      0.05
+    )
 
     snowAne.current.scale.y = THREE.MathUtils.lerp(
-        snowAne.current.scale.y,
-        targetScale,
-        0.05
-      )
+      snowAne.current.scale.y,
+      targetScale,
+      0.05
+    )
 
     const targetPos = THREE.MathUtils.clamp(
       THREE.MathUtils.mapLinear(snowDepth, 0, 0.5, 0.155, 0.176), 0.155, 0.176
     )
 
     snowDirS.current.position.y = THREE.MathUtils.lerp(
-        snowDirS.current.position.y,
-        targetPos,
-        0.05
-      )
+      snowDirS.current.position.y,
+      targetPos,
+      0.05
+    )
 
     const targetScaleArrow = THREE.MathUtils.clamp(
       THREE.MathUtils.mapLinear(snowDepth, 0, 1, 0, 1), 0, 1
     )
 
     snowArrow.current.scale.y = THREE.MathUtils.lerp(
-        snowArrow.current.scale.y,
-        targetScaleArrow,
-        0.05
-      )
+      snowArrow.current.scale.y,
+      targetScaleArrow,
+      0.05
+    )
 
     snowArrow1.current.scale.y = THREE.MathUtils.lerp(
-        snowArrow1.current.scale.y,
-        targetScaleArrow,
-        0.05
-      )
+      snowArrow1.current.scale.y,
+      targetScaleArrow,
+      0.05
+    )
 
 
     const rpm = windSpd.current * 3
@@ -105,7 +105,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           position={[0.317, 0.176, -0.001]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={[0.318, 0.318, 0]}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
         <mesh
           ref={snowDirBar}
@@ -116,7 +116,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           position={[0.022, 0.097, -0.001]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={[0.639, 0.129, 0]}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
         <mesh
           ref={snowArrow}
@@ -126,7 +126,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           material={materials.snow}
           position={[0, 0.386, 0]}
           scale={[9.569, 0.527, 0.527]}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
         <mesh
           ref={snowArrow1}
@@ -136,7 +136,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           material={materials.snow}
           position={[0, 0.487, 0]}
           scale={[9.569, 0.527, 0.527]}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
         <mesh
           ref={snowDirS}
@@ -147,7 +147,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           position={[0.317, 0.155, -0.001]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.318}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
         <mesh
           ref={snowAne}
@@ -158,7 +158,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
           position={[0, 0.724, 0]}
           rotation={[0, Math.PI / 2, 0]}
           scale={[2.543, 0.298, 0.298]}
-          visible={snowDepth >= 0.01}
+          visible={snowDepth >= 0.1}
         />
 
         <mesh

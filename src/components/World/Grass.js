@@ -5,7 +5,7 @@ import { param } from "@/lib/param"
 import vertexShader from './shader/grass/vertexShader.glsl'
 import fragmentShader from './shader/grass/fragmentShader.glsl'
 
-export default function Grass({ progress, windDir, windSpd, lightDir }) {
+export default function Grass({ progress, windDir, windSpd, lightDir, snowDepth }) {
   const count = 5000
   const grassRef = useRef()
   const bladesPerTuft = 4
@@ -42,6 +42,7 @@ export default function Grass({ progress, windDir, windSpd, lightDir }) {
         uLightDir: { value: lightDir },
         uLightAngle: { value: 2 },
         uLightPenumbra: { value: 0.5 },
+        uSnowDepth: { valeu: snowDepth }
       },
       side: THREE.DoubleSide
     })
@@ -100,6 +101,7 @@ export default function Grass({ progress, windDir, windSpd, lightDir }) {
     grassRef.current.material.uniforms.uProgress.value = progress
     grassRef.current.material.uniforms.uWindDir.value = new THREE.Vector2(Math.cos(windDir.current), -Math.sin(windDir.current))
     grassRef.current.material.uniforms.uWindSpeed.value = windSpd.current
+    grassRef.current.material.uniforms.uSnowDepth.value = snowDepth
   })
 
   return (

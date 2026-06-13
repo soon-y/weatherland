@@ -75,7 +75,7 @@ export default function WorldGround({ store, hourly, index }) {
       )
 
     const targetScale = THREE.MathUtils.clamp(
-      THREE.MathUtils.mapLinear(snowDepth, 0, 0.5, 0.4, 0.929), 0.4, 0.929
+      THREE.MathUtils.mapLinear(snowDepth, 0, 0.5, 0.4, 0.93), 0.4, 0.93
     )
 
     snowRockRefs.forEach(ref => {
@@ -105,7 +105,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.259, 0.07, -0.002]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -117,7 +117,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.302, 0.067, 0.012]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -129,7 +129,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.062, 0.071, 0.027]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -141,7 +141,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.126, 0.068, 0.023]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -153,7 +153,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.486, 0.056, -0.028]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -165,7 +165,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.752, 0.07, 0.055]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -177,7 +177,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.646, 0.058, 0.369]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -189,7 +189,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.41, 0.073, 0.648]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -201,7 +201,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.093, 0.063, 0.784]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -213,7 +213,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.221, 0.074, 0.745]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -225,7 +225,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.543, 0.064, 0.546]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -237,7 +237,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.686, 0.069, 0.325]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -249,7 +249,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.739, 0.069, 0.029]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -261,7 +261,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.612, 0.063, -0.054]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -273,7 +273,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.473, 0.061, -0.072]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -285,7 +285,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.737, 0.073, 0.169]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -297,7 +297,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.633, 0.072, 0.45]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -309,7 +309,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.389, 0.07, 0.667]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -321,7 +321,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.06, 0.073, 0.783]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -333,7 +333,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.257, 0.068, 0.75]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -345,7 +345,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.557, 0.072, 0.519]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -357,7 +357,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.754, 0.071, 0.231]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -369,7 +369,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[0.626, 0.063, -0.057]}
         scale={[0.929, 0.1, 0.929]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       >
         <meshStandardMaterial color={snowColor} roughness={1} metalness={0} />
       </mesh>
@@ -382,7 +382,7 @@ export default function WorldGround({ store, hourly, index }) {
         material={materials.snow}
         position={[-0.003, -0.03, -0.001]}
         scale={1.017}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
 
       <mesh

@@ -87,7 +87,7 @@ export function Bench(props) {
         material={materials.snow}
         position={[-0.995, 0.656, 0.372]}
         scale={[0.029, 0, 0.336]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
       <mesh
         ref={snowBenchTopRef}
@@ -98,7 +98,7 @@ export function Bench(props) {
         position={[0, 1.372, -0.094]}
         rotation={[0.589, 0, 0]}
         scale={[1.001, 0.014, 0]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
       <mesh
         ref={snowBottomRef}
@@ -109,7 +109,7 @@ export function Bench(props) {
         position={[-1.001, 0.387, 0.268]}
         rotation={[0, 0, -Math.PI / 2]}
         scale={[0.04, 0.024, 0.25]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
       <mesh
         ref={snowBenchRef}
@@ -119,7 +119,7 @@ export function Bench(props) {
         material={materials.snow}
         position={[0, 0.645, 0.531]}
         scale={[1.001, 0, 0.057]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
       <mesh
         ref={snowHandleTopRef}
@@ -129,7 +129,7 @@ export function Bench(props) {
         material={materials.snow}
         position={[-1.003, 1.03, 0.065]}
         scale={[0.02922, 0.027, 0.336]}
-        visible={snowDepth >= 0.01}
+        visible={snowDepth >= 0.1}
       />
 
       <mesh
