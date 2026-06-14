@@ -1,4 +1,4 @@
-export function Sun() {
+export function Sun(props) {
   const fillStyle = { fill: '#ffcf00' }
 
   return (
@@ -8,6 +8,7 @@ export function Sun() {
       viewBox="0 0 32 32"
       width="32"
       height="32"
+      {...props}
     >
       <g className="animate-[spin_10s_linear_infinite] origin-center">
         <path

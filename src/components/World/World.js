@@ -3,9 +3,10 @@ import { Canvas, useThree } from "@react-three/fiber"
 import { levaStore } from 'leva'
 import { param, useIsDebug } from "@/lib/param"
 import DebugUI from "../debugUI"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import WorldGround from "./Ground"
 import Environment from "./environment"
+import Loading from "@/components/loading"
 
 function World({ hourly, daily, index }) {
   const [indexD, setIndexD] = useState(0)
@@ -30,22 +31,25 @@ function World({ hourly, daily, index }) {
         physicallyCorrectLights: true,
       }}
     >
-      <OrbitControls
-        target={param.worldPos}
-        maxDistance={50}
-        minDistance={isDebug ? 0 : 20}
-        maxPolarAngle={isDebug ? Math.PI * 0.5 : Math.PI * 0.5}
-        minPolarAngle={isDebug ? 0 : Math.PI * 0.3}
-        enableDamping
-        dampingFactor={0.03}
-      />
+      <Loading />
+      <Suspense fallback={null}>
+        <OrbitControls
+          target={param.worldPos}
+          maxDistance={50}
+          minDistance={isDebug ? 0 : 20}
+          maxPolarAngle={isDebug ? Math.PI * 0.5 : Math.PI * 0.5}
+          minPolarAngle={isDebug ? 0 : Math.PI * 0.3}
+          enableDamping
+          dampingFactor={0.03}
+        />
 
-      <CameraController />
+        <CameraController />
 
-      <group position={param.worldPos}>
-        <Environment store={levaStore} hourly={hourly} daily={daily} index={index} indexD={indexD} />
-        <WorldGround store={levaStore} hourly={hourly} index={index} />
-      </group>
+        <group position={param.worldPos}>
+          <Environment store={levaStore} hourly={hourly} daily={daily} index={index} indexD={indexD} />
+          <WorldGround store={levaStore} hourly={hourly} index={index} />
+        </group>
+      </Suspense>
     </Canvas>
   </>
 }
