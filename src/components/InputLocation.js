@@ -90,13 +90,13 @@ export default function InputArea({ setGeolocation, hide }) {
       {latitudeVal != null && longitudeVal != null && suburbArea && postcodeVal &&
         <div>
           {!hide ?
-            <div className='p-6'>
-              <div className={'font-bold text-xl flex bg-white/40 backdrop-blur-lg py-1 px-4 rounded-full'}>
+            <div className='p-2'>
+              <div className={'font-bold text-base sm:text-lg flex py-1 px-2 text-white'}>
                 {suburbArea}
               </div>
             </div>
             :
-            <div className='p-6 grid place-items-end gap-2'>
+            <div className='p-2 grid place-items-end gap-1'>
               <Input
                 label={"Region"}
                 value={suburbArea}

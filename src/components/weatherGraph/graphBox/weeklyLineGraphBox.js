@@ -135,7 +135,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
               </div>
             ))}
         </div>
-        <p className="ml-1 py-2 text-sm opacity-70 flex items-center h-14">{unit}</p>
+        <p className="ml-1 py-2 text-xs sm:text-sm opacity-70 flex items-center h-14">{unit}</p>
 
         {/* Graph grid */}
         <div className="w-[calc(100%-40px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
@@ -209,7 +209,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
         </div>
 
         {/* tick labels */}
-        <div className="flex flex-col justify-between text-sm pl-1"
+        <div className="flex flex-col justify-between text-xs sm:text-sm pl-1"
           style={{ height: `calc(${100 + (2.5 * ratio)}%)`, transform: `translateY(-${3 * ratio}%)` }}
         >
           {val.map((el, i) => (
@@ -217,7 +217,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
           ))}
         </div>
 
-        <div className="flex justify-between text-sm w-[104%] -translate-x-[2%]">
+        <div className="flex justify-between text-xs sm:text-sm w-[104%] -translate-x-[2%]">
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}

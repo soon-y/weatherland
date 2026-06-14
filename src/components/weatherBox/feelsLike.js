@@ -55,8 +55,8 @@ export default function FeelsLike({ hourly, index, setDisplay, setBoxClicked }) 
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='text-2xl font-semibold'>{feelsLike}°</p>
-        <p className='text-lg'>Actual: {hourly.temperature_2m[index]}°</p>
+        <p className={param.weatherDescMain}>{feelsLike}°</p>
+        <p className={param.weatherDescSub}>Actual: {hourly.temperature_2m[index]}°</p>
       </div>
       {feelsLikeRange()}
     </Box>

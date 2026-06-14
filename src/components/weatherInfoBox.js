@@ -4,7 +4,7 @@ export default function InfoBox({title=null, info1, unit1 = '', info2 = '', unit
   return (
     <>
       {condition &&
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center text-xs sm:text-sm">
           {title && titleSvg(title, isDay)}
           {info3 && <p className="font-light">{info3}</p>}
           <p>{info1}<span className="text-xs"> {unit1}</span></p>

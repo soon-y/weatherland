@@ -14,7 +14,7 @@ export default function Input({
   const [tempCo, setTempCo] = useState(country)
   const styles = 'w-[90vw] sm:w-[60vw] md:w-[50vw] lg:w-[400px] xl:w-[400px] py-2'
   const btnStyles = 'text-sm font-semibold uppercase bg-white/60 rounded-full hover:bg-white/80 duration-400 cursor-pointer text-black'
-  const inputStyles = 'outline-none focus:outline-none focus:ring-0 bg-white py-2 px-4 rounded-lg text-black'
+  const inputStyles = 'outline-none focus:outline-none focus:ring-0 bg-white py-2 px-3 rounded-lg text-black'
 
   useEffect(() => {
     setTempLat(lat)
@@ -28,8 +28,9 @@ export default function Input({
     <div>
       <div
         onClick={() => { if(!hide) setOpen(true)}}
-        className={` ${label == 'Region' ? 'font-bold text-xl' : ''}
-        flex bg-white/40 backdrop-blur-lg py-1 px-4 rounded-full text-black ${!hide? 'cursor-pointer' : ''}   
+        className={`flex bg-white/40 backdrop-blur-lg py-1 px-2 rounded-full text-black 
+          ${!hide? 'cursor-pointer' : ''}
+          ${label == 'Region' ? 'font-bold text-base sm:text-lg' : 'text-xs sm:text-base '}   
       `}>
         {value}{unit}
       </div>

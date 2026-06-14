@@ -43,7 +43,7 @@ export default function Home() {
     <div className='w-[100vw] h-[100vh]'>
       <World hourly={hourlyData} daily={dailyData} index={index} />
 
-      <div className='fixed bottom-0 w-full p-4'>
+      <div className='fixed bottom-0 w-full p-2'>
         {hourlyData ?
           <Slider hourly={hourlyData} setIndex={setIndex} index={index} />
           :
@@ -56,7 +56,7 @@ export default function Home() {
         {(index != null && isFinite(index) && airData && hourlyData && dailyData) ?
           <WeatherInfo hourly={hourlyData} daily={dailyData} air={airData} moon={moonData} index={index} clicked={setInfoClicked} />
           :
-          <div className={`m-4 animate-pulse w-42 h-42 rounded-xl bg-black/20`}></div>
+          <div className={`m-2 animate-pulse w-36 h-36 rounded-xl bg-black/20`}></div>
         }
       </div>
 

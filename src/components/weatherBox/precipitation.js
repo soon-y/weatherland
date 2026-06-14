@@ -12,9 +12,9 @@ export default function Precipitation({ daily, hourly, index, indexD, setDisplay
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='text-2xl font-semibold'>{probability}%</p>
+        <p className={param.weatherDescMain}>{probability}%</p>
         {totalSum[indexD] != 0 &&
-          <p className='text-lg'>{hourly.precipitation[index]}
+          <p className={param.weatherDescSub}>{hourly.precipitation[index]}
             <span className="text-sm"> mm / {totalSum[indexD]} mm in total</span>
           </p>
         }

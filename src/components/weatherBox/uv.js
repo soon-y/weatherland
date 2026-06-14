@@ -10,8 +10,8 @@ export default function UVindex({ air, index, setDisplay, setBoxClicked }) {
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='text-2xl font-semibold'>{uvIndex(current).state}</p>
-        <p className=''>{current}</p>
+        <p className={param.weatherDescMain}>{uvIndex(current).state}</p>
+        <p className={param.weatherDescSub}>{current}</p>
       </div>
       <div className={`${param.weatherBarContainer}`}>
         <div className={`${param.weatherBar} rounded-full bg-gradient-to-r from-lime-500 from-5% via-yellow-300 via-30% to-red-500 to-90%`} />

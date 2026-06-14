@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import WeatherIcon from "./weatherIcon"
-import { param, tempColorIndex, tempColorList, todayProgress } from "@/lib/param"
+import { isMobile, param, tempColorIndex, tempColorList, todayProgress } from "@/lib/param"
 
 export default function Slider({ hourly, setIndex, index }) {
   const today = new Date()
@@ -12,7 +12,8 @@ export default function Slider({ hourly, setIndex, index }) {
   const [hourlyData, setHourlyData] = useState(null)
   const [time, setTime] = useState(null)
   const [hover, setHover] = useState(null)
-  const graphSize = { w: graphWidth, h: param.sliderHeight * 0.3 }
+  const [sliderHeight, setSliderHeight] = useState(150)
+  const graphSize = { w: graphWidth, h: sliderHeight * 0.3 }
   const temp = hourly.temperature_2m
   const feels = hourly.apparent_temperature
   const max = Math.max(...temp, ...feels) + 3
@@ -28,11 +29,12 @@ export default function Slider({ hourly, setIndex, index }) {
     setTime(currentHour)
 
     const handleResize = () => {
-      const windowWidth = window.innerWidth - 32
-      const divide = windowWidth > 1000 ? 10 : windowWidth > 500 ? 6 : 4
+      const windowWidth = window.innerWidth - 16
+      const divide = windowWidth > 1000 ? 10 : isMobile(windowWidth) ? 6 : 4
       const box = windowWidth / divide
       setBoxWidth(box)
       setGraphWidth(box * 168)
+      setSliderHeight(windowWidth >= 640 ? param.sliderHeight : 120)
     }
 
     handleResize()
@@ -127,7 +129,7 @@ export default function Slider({ hourly, setIndex, index }) {
   if (!hourlyData) return
   return (
     <>
-      <div className="fixed left-4 bottom-4 select-none">
+      <div className="fixed left-2 bottom-2 select-none">
         {hourlyData &&
           <div className="text-xs font-semibold items-center justify-between bg-black/50 rounded-t-lg py-2 backdrop-blur-xl">
             <div className="flex items-center gap-2 ml-2">
@@ -140,37 +142,39 @@ export default function Slider({ hourly, setIndex, index }) {
             </div>
           </div>
         }
-        <div style={{ width: boxWidth, height: param.sliderHeight + 'px' }} />
+        <div style={{ width: boxWidth, height: sliderHeight + 'px' }} />
       </div>
 
       <div ref={ref} onScrollEnd={handleScroll}
-        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none`}>
+        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none overflow-hidden`}>
         {hourlyData.map((el, i) => (
           <div key={i} onClick={() => setIndex(i)}
             className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10
               ${i < time ? "text-gray-300" : "text-white"}  ${i === index && "font-bold"} ${i === hover && "bg-white/10"}`}
-            style={{ width: `${boxWidth}px`, height: param.sliderHeight + 'px' }}
+            style={{ width: `${boxWidth}px`, height: sliderHeight + 'px' }}
           >
-            <div className="grid grid-rows-[35%_30%_15%_20%] h-full">
-              <div className={`${i < time ? 'opacity-40' : 'opacity-100'} flex justify-center py-1`}>
+            <div className="grid grid-rows-[42px_35%_15%_20%] h-full">
+              <div className={`${i < time ? 'opacity-40' : 'opacity-100'} flex justify-center`}>
                 <WeatherIcon code={el.code} isDay={el.isDay} probability={el.probability} />
               </div>
-
               <div />
 
-              <div className={`leading-none opacity-80 flex items-center justify-center text-[11px] sm:text-sm`}>
+              <div className={`leading-none opacity-80 flex items-center justify-center text-[11px] text-xs sm:text-sm`}>
                 {el.temp}° / {el.feels}°
               </div>
 
-              <div className="flex items-start justify-center">{i === time ? 'Now' : el.time + 'h'}</div>
+              <div className="flex items-start justify-center text-xs sm:text-base">
+                {i === time ? 'Now' : el.time + 'h'}
+              </div>
             </div>
           </div>
         ))}
 
+        {/* graph */}
         <div className="absolute cursor-pointer" onClick={handleClick} onMouseMove={handleHover} onMouseLeave={() => setHover(null)} style={{
-          top: '40px', left: boxWidth / 2,
-          height: param.sliderHeight * 0.3 + 'px',
-          width: boxWidth * 167
+          top: '43px', left: boxWidth / 2,
+          height: sliderHeight * 0.35 + 'px',
+          width: boxWidth * 167,
         }}>
           <svg width='100%' height='100%' className="relative" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
             <defs>
@@ -221,13 +225,13 @@ export default function Slider({ hourly, setIndex, index }) {
         </div>
       </div>
 
-      <div className="fixed left-4 bottom-4 select-none">
+      <div className="fixed left-2 bottom-2 select-none">
         <div className={`shadow-l2g outline rounded-lg duration-500 ${isDay ? 'outline-black/50' : 'outline-white/30'}`}
-          style={{ width: boxWidth, height: param.sliderHeight + 'px' }}
+          style={{ width: boxWidth, height: sliderHeight + 'px' }}
         />
       </div>
 
-      <button className={`cursor-pointer absolute top-[-18px] right-5 text-sm text-white bg-black/40 py-1 px-3 rounded-full backdrop-blur-lg duration-500`}
+      <button className={`cursor-pointer absolute top-[-26px] right-2 text-sm text-white bg-black/40 py-1 px-3 rounded-full backdrop-blur-lg duration-500`}
         style={{ display: index === time ? 'none' : 'block' }}
         onClick={() => setIndex(time)}>
         back to NOW

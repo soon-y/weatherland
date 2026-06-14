@@ -44,8 +44,8 @@ export default function Humidity({ hourly, index, setDisplay, setBoxClicked }) {
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='text-2xl font-semibold'>{hourly.relative_humidity_2m[index]}%</p>
-        <p>The dew point: <span className="font-semibold">{dewPoint}°</span></p>
+        <p className={param.weatherDescMain}>{hourly.relative_humidity_2m[index]}%</p>
+        <p className={param.weatherDescSub}>The dew point: <span className="font-semibold">{dewPoint}°</span></p>
       </div>
 
       <div className={`${param.weatherBarContainer}`}>

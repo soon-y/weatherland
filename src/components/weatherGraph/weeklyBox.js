@@ -40,9 +40,9 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
   }, [display])
 
   return (
-    <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} px-4 duration-500 ease-in-out ${boxClicked ? 'top-18 opacity-100' : 'top-[100%] opacity-0'}`}>
+    <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} px-2 duration-500 ease-in-out ${boxClicked ? 'top-12 opacity-100' : 'top-[100%] opacity-0'}`}>
       <div className={`h-full w-full rounded-t-xl backdrop-blur-2xl bg-black/80 overflow-y-scroll select-none`}>
-        <div className="py-6 px-8 sm:px-16">
+        <div className="px-4 py-4 sm:py-6 sm:px-16">
           <div className="mb-4 flex justify-center">
             <BoxTitle title={isNumber ? 'temperature' : display} />
           </div>
@@ -50,8 +50,8 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
           <div className="grid grid-cols-7 gap-2 sm:gap-4">
             {weekly.map((el, i) => (
               <div key={i} onClick={() => setIndexW(i)} className="cursor-pointer">
-                <p className="flex items-center justify-center mb-2">{el.day}</p>
-                <p className={`flex items-center justify-center aspect-square outline outline-white/50 rounded-full duration-500 
+                <p className="flex items-center justify-center mb-1 sm:mb-2">{el.day}</p>
+                <p className={`text-sm sm:text-base flex items-center justify-center aspect-square outline outline-white/50 rounded-full duration-500 
                 ${i == indexW && 'font-bold bg-white/80 text-black'}`
                 }>
                   {el.date}
@@ -106,7 +106,7 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
           setIndexW(indexD)
         }, 300)
       }}
-        className='absolute right-5 bottom-5 text-white p-3 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
+        className='absolute right-3 top-2 text-white p-2 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
       </button>
     </div>
   )

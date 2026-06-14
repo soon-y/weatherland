@@ -1,8 +1,8 @@
+import { param } from "@/lib/param"
 import Box from "./box"
 import BoxTitle from "./boxTitle"
 
 export default function Sunrise({ daily, hourly, index, indexD, setDisplay, setBoxClicked }) {
-  const styles = 'text-2xl font-semibold'
   const sunrise = daily.sunrise[indexD]
   const sunset = daily.sunset[indexD]
   const sunriseNext = daily.sunrise[indexD + 1] ? daily.sunrise[indexD + 1] : daily.sunrise[indexD]
@@ -24,16 +24,16 @@ export default function Sunrise({ daily, hourly, index, indexD, setDisplay, setB
         return (
           <div>
             <BoxTitle title={'sunrise'} />
-            <p className={`${styles}`}>{sunriseNext.split("T")[1]}</p>
-            <p>Sunset at {sunsetNext.split("T")[1]}</p>
+            <p className={param.weatherDescMain}>{sunriseNext.split("T")[1]}</p>
+            <p className={param.weatherDescSub}>Sunset at {sunsetNext.split("T")[1]}</p>
           </div>
         )
       } else {
         return (
           <div>
             <BoxTitle title={'sunset'} />
-            <p className={`${styles}`}>{sunset.split("T")[1]}</p>
-            <p>Sunrise at {sunriseNext.split("T")[1]}</p>
+            <p className={param.weatherDescMain}>{sunset.split("T")[1]}</p>
+            <p className={param.weatherDescSub}>Sunrise at {sunriseNext.split("T")[1]}</p>
           </div>
         )
       }
@@ -41,8 +41,8 @@ export default function Sunrise({ daily, hourly, index, indexD, setDisplay, setB
       return (
         <div>
           <BoxTitle title={'sunrise'} />
-          <p className={`${styles}`}>{sunrise.split("T")[1]}</p>
-          <p>Sunset at {sunset.split("T")[1]}</p>
+          <p className={param.weatherDescMain}>{sunrise.split("T")[1]}</p>
+          <p className={param.weatherDescSub}>Sunset at {sunset.split("T")[1]}</p>
         </div>
       )
     }

@@ -59,17 +59,17 @@ export default function Forecast({ daily, hourly, index, indexD, setDisplay, set
   return (
     <Box style={'forecast'}>
       <BoxTitle title={'7-day forecast'} />
-      <div className='grid gap-2'>
+      <div className='grid gap-2 mb-1'>
         {weekly.map((el, i) => (
           <div key={i} className='grid grid-cols-7 sm:grid-cols-8 items-center justify-center h-9' onClick={() => {
             setDisplay(i)
             setBoxClicked(true)
           }}>
-            <p className={`col-span-1 ${i == indexD && 'font-bold'}`}>{el.day}</p>
+            <p className={`col-span-1 text-sm sm:text-base ${i == indexD && 'font-bold'}`}>{el.day}</p>
             <div className='flex justify-center items-center'>
               <WeatherIcon code={el.code} probability={el.probability} />
             </div>
-            <p className={`col-span-1 text-center ${i == indexD && 'font-bold'}`}>{el.min}°</p>
+            <p className={`col-span-1 text-sm sm:text-base text-center ${i == indexD && 'font-bold'}`}>{el.min}°</p>
             <div className={`col-span-3 sm:col-span-4 relative h-2 rounded-full ${i == indexD ? 'bg-black/40' : 'bg-black/20'}`}>
               <div
                 className="absolute inset-0 rounded-full"
@@ -82,7 +82,7 @@ export default function Forecast({ daily, hourly, index, indexD, setDisplay, set
                 />
               }
             </div>
-            <p className={`col-span-1 text-center ${i == indexD && 'font-bold'}`}>{el.max}°</p>
+            <p className={`col-span-1 text-sm sm:text-base text-center ${i == indexD && 'font-bold'}`}>{el.max}°</p>
           </div>
         ))}
       </div>

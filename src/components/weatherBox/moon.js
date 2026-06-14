@@ -1,6 +1,7 @@
 import Box from "./box"
 import BoxTitle from "./boxTitle"
 import MoonImg from "../weatherGraph/graphBox/moonBox"
+import { param } from "@/lib/param"
 
 export default function Moon({ daily, indexD, setDisplay, setBoxClicked }) {
   const title = 'moon_' + (daily[indexD].moon_phase).replace('_', ' ')
@@ -15,8 +16,8 @@ export default function Moon({ daily, indexD, setDisplay, setBoxClicked }) {
 
       <div className='grid grid-cols-[58%_40%_2%]'>
         <div className="grid items-center">
-          <p className="text-xl/4 font-bold capitalize">{phaseMoon}</p>
-          <div className='grid grid-cols-2 items-center '>
+          <p className={`capitalize ${param.weatherDescMain}`}>{phaseMoon}</p>
+          <div className={`grid grid-cols-2 items-center ${param.weatherDescSub}`}>
             <p className="font-semibold">Moonrise</p>
             <p>{moon.moonrise}</p>
             <p className="font-semibold">Moonset</p>

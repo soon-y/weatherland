@@ -11,7 +11,7 @@ export default function Visibility({ hourly, index, setDisplay, setBoxClicked })
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='font-bold text-2xl'>{current}km</p>
+        <p className={param.weatherDescMain}>{current}km</p>
       </div>
 
       <div>

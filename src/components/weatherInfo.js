@@ -78,15 +78,15 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
         setOpen(true)
         clicked(true)
       }}
-        className={` fixed top-0 m-4 px-4 py-2 select-none grid text-white font-semibold gap-1 rounded-xl
+        className={`fixed top-0 m-2 px-2 pt-0 pb-2 select-none grid text-white font-semibold gap-1 rounded-xl
           ${open ? "bg-white/0" : "bg-black/15 backdrop-blur-xl"}
           ${!open && "hover:outline cursor-pointer "}
           ${!open && (isDay ? "hover:outline-black/50" : "hover:outline-white/50")}
       `}>
-        <div className={`flex gap-2 items-center h-8 mb-2 duration-500 ${!open && 'justify-between'}
+        <div className={`flex gap-2 items-center h-8 duration-500 ${!open && 'justify-between'}
           ${isDay && !open ? 'text-black' : 'text-white'}`}
         >
-          <p className='font-bold text-xl flex gap-2'>{
+          <p className='font-bold text-base sm:text-lg'>{
             new Date(hourly.time[index]).toLocaleDateString("en-GB", {
               weekday: "short",
               day: "numeric",
@@ -97,7 +97,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
             {!open ?
               <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={false} />
               :
-              <span className='text-xl'>{String(time).padStart(2, "0")}:00</span>
+              <span className='text-base sm:text-lg'>{String(time).padStart(2, "0")}:00</span>
             }
           </div>
         </div>
@@ -106,8 +106,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           ${!open ? 'opacity-100' : 'opacity-0'} 
           ${isDay ? 'text-black' : 'text-white'}`}
         >
-          <div className='grid grid-cols-[32px_1fr_32px] gap-2 items-center justify-center'>
-            <p className='text-center text-sm'>{daily.temperature_2m_min[indexD]}°</p>
+          <div className='grid grid-cols-[28px_1fr_28px] sm:grid-cols-[32px_1fr_32px] gap-2 items-center justify-center'>
+            <p className='text-center text-xs sm:text-sm'>{daily.temperature_2m_min[indexD]}°</p>
             <div className={`relative h-2 rounded-full`}>
               <div
                 className="absolute inset-0 rounded-full"
@@ -118,7 +118,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
                 style={currentTemp()}
               />
             </div>
-            <p className='text-center text-sm'>{daily.temperature_2m_max[indexD]}°</p>
+            <p className='text-center text-xs sm:text-sm'>{daily.temperature_2m_max[indexD]}°</p>
           </div>
 
           <InfoBox title={'temperature'} isDay={isDay}
@@ -159,7 +159,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
             info2={Math.round(visibility / 1000)} unit2={'km'}
             condition={visibility < 10000}
           />
-          
+
           <InfoBox title={'sunrise'} isDay={isDay}
             info1={sunriseToday.split('T')[1]}
             condition={now < sunriseTimeToday}

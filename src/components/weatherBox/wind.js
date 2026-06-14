@@ -1,5 +1,5 @@
 import Box from "./box"
-import { getWindDirection, getWindLevel } from "@/lib/param"
+import { getWindDirection, getWindLevel, param } from "@/lib/param"
 import Image from "next/image"
 import BoxTitle from "./boxTitle"
 
@@ -15,13 +15,13 @@ export default function Wind({ hourly, index, setDisplay, setBoxClicked }) {
 
       <div className='grid grid-cols-[58%_40%_2%]'>
         <div className="grid items-center">
-          <p className="text-xl font-bold">{getWindLevel(wind)}</p> <p />
-          <div className='grid grid-cols-[90px_1fr] items-center '>
-            <p className="font-semibold">Wind</p>
+          <p className={param.weatherDescMain}>{getWindLevel(wind)}</p> <p />
+          <div className={`${param.weatherDescSub} grid grid-cols-[90px_1fr] items-center`}>
+            <p className='font-semibold'>Wind</p>
             <p className="flex gap-2">{wind}km/h</p>
-            <p className="font-semibold">Gusts</p>
+            <p className='font-semibold'>Gusts</p>
             <p>{gusts}km/h</p>
-            <p className="font-semibold">Direction</p>
+            <p className='font-semibold'>Direction</p>
             <p>{getWindDirection(angle)}</p>
           </div>
         </div>
@@ -32,11 +32,11 @@ export default function Wind({ hourly, index, setDisplay, setBoxClicked }) {
           <p className="absolute opacity-80 font-bold bottom-1/2 right-1 translate-y-1/2">E</p>
           <p className="absolute opacity-80 font-bold top-1/2 -translate-y-1/2">W</p>
           <div className="text-center leading-none absolute left-1/2 top-1/2 -translate-1/2">
-            <p className="font-semibold text-2xl/6">{wind}</p>
-            <p className="text-sm">km/h</p>
+            <p className="font-semibold text-lg/4 sm:text-2xl/6">{wind}</p>
+            <p className="text-xs sm:text-sm">km/h</p>
           </div>
           <Image className="absolute opacity-20" src={'/weather/wind/compass.png'} width={400} height={400} alt="compass" />
-          <Image className="absolute opacity-90" style={{ rotate: angle + 90 + 'deg' }} src={'/weather/wind/arrow.png'} width={400} height={400} alt="arrow" />
+          <Image className="absolute opacity-80" style={{ rotate: angle + 90 + 'deg' }} src={'/weather/wind/arrow.png'} width={400} height={400} alt="arrow" />
         </div>
       </div>
     </Box>

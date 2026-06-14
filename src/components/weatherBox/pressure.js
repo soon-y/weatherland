@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Box from "./box"
-import { pressure } from "@/lib/param"
+import { param, pressure } from "@/lib/param"
 import BoxTitle from "./boxTitle"
 
 export default function Pressure({ hourly, index, setDisplay, setBoxClicked }) {
@@ -33,7 +33,7 @@ export default function Pressure({ hourly, index, setDisplay, setBoxClicked }) {
     <Box style={'square'} setDisplay={setDisplay} title={'pressure'} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className={`capitalize text-xl font-bold`}>{pressure(current)}</p>
+        <p className={`${param.weatherDescMain} capitalize font-bold`}>{pressure(current)}</p>
       </div>
       <div className='relative w-[calc(100%-50px)] aspect-square left-1/2 -translate-x-1/2'>
         <Image className="absolute opacity-20" src={'/weather/pressure/gauge2.png'} width={400} height={400} alt="pressure gauge" />
@@ -48,12 +48,12 @@ export default function Pressure({ hourly, index, setDisplay, setBoxClicked }) {
           />}
 
         <div className="text-center absolute left-1/2 top-1/2 -translate-1/2">
-          <p className="font-semibold text-xl/5">{Math.round(current)}</p>
-          <p className="text-sm">hPa</p>
+          <p className={`font-semibold text-base/4 sm:text-lg/5`}>{Math.round(current)}</p>
+          <p className="text-xs sm:text-sm">hPa</p>
         </div>
         <div className={`text-xs absolute bottom-1 flex justify-between w-full`}>
-          <span className="ml-[20%]">Low</span>
-          <span className="mr-[20%]">High</span>
+          <span className="ml-[10%]">Low</span>
+          <span className="mr-[10%]">High</span>
         </div>
       </div>
     </Box>

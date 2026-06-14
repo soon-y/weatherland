@@ -10,8 +10,8 @@ export default function AirQuality({ air, index, setDisplay, setBoxClicked }) {
     <Box style={'square'} setDisplay={setDisplay} title={title} setBoxClicked={setBoxClicked}>
       <div>
         <BoxTitle title={title} />
-        <p className='text-2xl font-semibold'>{airQuality(current).state}</p>
-        <p className=''>{current}</p>
+        <p className={param.weatherDescMain}>{airQuality(current).state}</p>
+        <p className={param.weatherDescSub}>{current}</p>
       </div>
 
       <div className={`${param.weatherBarContainer}`}>
