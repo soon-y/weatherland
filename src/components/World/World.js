@@ -31,8 +31,7 @@ function World({ hourly, daily, index }) {
         physicallyCorrectLights: true,
       }}
     >
-      <Loading />
-      <Suspense fallback={null}>
+      <Suspense fallback={<Loading />}>
         <OrbitControls
           target={param.worldPos}
           maxDistance={50}
