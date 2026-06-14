@@ -118,7 +118,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
     }
     return { d, stroke }
   }
-  
+
   return (
     <div className="relative">
       <div className="w-full grid grid-cols-[1fr_40px]">
@@ -170,7 +170,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
 
                 <mask id="graphMask" maskUnits="userSpaceOnUse">
                   <rect x="-5" y="-5" width={graphSize.w + 10} height={graphSize.h + 10} fill="white" />
-                  {indexW == 0 && <rect x="-5" y="-5" width={(todayProgress(today) / 100) * (graphSize.w + 10) + '%'} height={graphSize.h + 10} fill="rgba(0,0,0,0.5)" />}
+                  {indexW == 0 && <rect x="-5" y="-5" width={(todayProgress(today) / 100) * (graphSize.w + 10)} height={graphSize.h + 10} fill="rgba(0,0,0,0.5)" />}
                 </mask>
               </defs>
             }
