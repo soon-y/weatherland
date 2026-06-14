@@ -60,7 +60,7 @@ void main() {
 
   float dist = distance(vWorldPos, uLightPos);
 
-  float attenuation = smoothstep(15.0, 0.0, dist);
+  float attenuation = smoothstep(12.0, 0.0, dist);
 
   float spotlight = intensity * 0.6 * attenuation * nightMask;
 
