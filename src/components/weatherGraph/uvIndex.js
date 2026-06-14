@@ -13,8 +13,8 @@ export default function WeeklyUVindex({ display, hourly, indexW, index, daily1 }
   }, [indexW])
 
   return (
-    <div className="w-full max-h-30 py-8">
-      <div className="py-2">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         {
           validIndex ? <span>{hoverIndex - indexW * 24}:00</span> : <span>Average</span>
         }

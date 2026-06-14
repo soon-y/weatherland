@@ -26,30 +26,30 @@ export default function WeeklyVisibility({ display, hourly, indexW, index }) {
   }, [indexW])
 
   return (
-    <div className="w-full max-h-30 py-8">
-            <div className="pt-8 pb-4">
-      {
-        validIndex ? <span>{hoverIndex - indexW * 24}:00</span> : <span>Average</span>
-      }
-
-      <div className="text-2xl flex gap-2 justify-between">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         {
-          validIndex ?
-            <>
-              <span className="font-bold">{visibilityInfo(Math.floor(current / 1000)).state}</span>
-              <span>{current / 1000}<span className="text-lg"> {unit}</span></span>
-            </>
-            :
-            <>
-              <span className="font-bold">{visibilityInfo(Math.floor(avg[indexW] / 1000)).state}</span>
-              <span>{avg[indexW] / 1000}<span className="text-lg"> {unit}</span></span>
-            </>
+          validIndex ? <span>{hoverIndex - indexW * 24}:00</span> : <span>Average</span>
         }
-      </div>
+
+        <div className="text-2xl flex gap-2 justify-between">
+          {
+            validIndex ?
+              <>
+                <span className="font-bold">{visibilityInfo(Math.floor(current / 1000)).state}</span>
+                <span>{current / 1000}<span className="text-lg"> {unit}</span></span>
+              </>
+              :
+              <>
+                <span className="font-bold">{visibilityInfo(Math.floor(avg[indexW] / 1000)).state}</span>
+                <span>{avg[indexW] / 1000}<span className="text-lg"> {unit}</span></span>
+              </>
+          }
+        </div>
       </div>
 
       <WeeklyGraphBox
-        display={display} unit={'m'} min={0} max={maxVal} step={maxVal*0.2}
+        display={display} unit={'km'} min={0} max={maxVal} step={maxVal * 0.2}
         hourly={hourly} indexW={indexW} index={index} hoverIndex={hoverIndex} setHover={setHover}
       />
     </div>

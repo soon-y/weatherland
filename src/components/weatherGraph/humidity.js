@@ -27,14 +27,14 @@ export default function WeeklyHumidity({ humidity, indexW, index, dewPoint, temp
   }, [indexW])
 
   return (
-    <div className="w-full">
-      <div className="pt-8">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         <div className="flex gap-2 justify-between">
           {
             validIndex ?
               <>
                 <span>{hoverIndex - indexW * 24}:00</span>
-                <span>Dew point / <span className="text-gray-400">Temperature</span></span>
+                <span>Dew point / Temperature</span>
               </>
               :
               <span>Average</span>
@@ -50,9 +50,9 @@ export default function WeeklyHumidity({ humidity, indexW, index, dewPoint, temp
                 </div>
 
                 <p>
-                  {dewPoint[hoverIndex]} <span className="text-lg">°C</span> /
-                  <span className="text-gray-400"> {temp[hoverIndex]}
-                    <span className="text-lg"> °C</span>
+                  {dewPoint[hoverIndex]} <span className="text-base">°C</span> /
+                  <span> {temp[hoverIndex]}
+                    <span className="text-base"> °C</span>
                   </span>
                 </p>
               </>

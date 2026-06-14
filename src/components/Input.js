@@ -40,7 +40,7 @@ export default function Input({
       `}>
         {
           (label == 'Latitude' || label == 'Longitude') ?
-            <div className={`${styles} grid grid-flow-rows grid-cols-2 gap-x-3 gap-y-1 items-center`}>
+            <div className={`${styles} grid grid-flow-rows grid-cols-2 gap-x-2 sm:gap-x-3 gap-y-1 items-center`}>
               <label className="text-white font-bold">Latitude</label>
               <label className="text-white font-bold">Longitude</label>
               <input
@@ -58,7 +58,7 @@ export default function Input({
                 className={`${inputStyles}`}
               />
 
-              <div className="mt-4 grid gap-2">
+              <div className="mt-2 sm:mt-4 grid gap-0 sm:gap-2">
                 <button
                   onClick={() => {
                     setOpen(!open)
@@ -82,7 +82,7 @@ export default function Input({
                 </button>
               </div>
             </div> :
-            <div className={`${styles} grid gap-x-3 gap-y-4 items-center`}>
+            <div className={`${styles} grid gap-2 sm:gap-x-3 sm:gap-y-4 items-center`}>
               <input
                 type='text'
                 value={tempSub}
@@ -105,7 +105,7 @@ export default function Input({
                 className={`${inputStyles}`}
               />
 
-              <div className="mt-4 grid gap-2">
+              <div className="mt-2 sm:mt-4 grid gap-0 sm:gap-2">
                 <button
                   onClick={() => {
                     setOpen(!open)

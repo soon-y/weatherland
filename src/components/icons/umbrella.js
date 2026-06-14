@@ -1,5 +1,5 @@
 export function Umbrella({ isDay }) {
-  const style = { fill: isDay ? '#2c2c2c' : '#fff', opacity: 0.8 }
+  const style = { fill: isDay ? '#000' : '#fff', opacity: 0.9 }
 
   return (
     <svg

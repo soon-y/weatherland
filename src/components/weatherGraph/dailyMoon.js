@@ -7,8 +7,8 @@ export default function DailyMoon({ indexW, moon }) {
   const moonPhase = moon[indexW].moon_phase.replace('_', ' ')
 
   return (
-    <div className="w-full">
-      <div className="pt-8 pb-4">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         <div className="flex justify-between">
           {!moonrise.includes('-:-') && <span>Moonrise</span>}
           {!moonset.includes('-:-') && <span>Moonset</span>}

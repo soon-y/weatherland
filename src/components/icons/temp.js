@@ -1,5 +1,5 @@
 export function Thermometer({ isDay}) {
-  const style = { fill: isDay ? '#2c2c2c' : '#fff'  }
+  const style = { fill: isDay ? '#000' : '#fff'  }
 
   return (
     <svg

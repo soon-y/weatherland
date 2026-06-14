@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import World from '@/components/World/World'
 import Slider from '@/components/Slider'
-import useSWR from 'swr'
 import { fetchOpenMeteo } from '@/app/api/weather/fetchOpenMeteo'
 import InputArea from '@/components/InputLocation'
 import WeatherInfo from '@/components/weatherInfo'

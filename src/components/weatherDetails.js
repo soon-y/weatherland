@@ -23,7 +23,7 @@ export default function WeatherDetails({ open, hourly, daily, air, moon, index, 
   return (
     <div>
       <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} ${open ? 'opacity-100' : 'opacity-0'}
-        flex flex-wrap content-start items-start overflow-scroll gap-3 p-2 sm:p-4 pb-12 duration-500
+        flex flex-wrap content-start items-start overflow-scroll gap-3 p-2 pt-[1px] sm:p-4 pb-12 duration-500
         `}>
         <Forecast daily={daily} hourly={hourly} index={index} indexD={indexD} setDisplay={setDisplay} setBoxClicked={setBoxClicked} />
         <FeelsLike hourly={hourly} index={index} setDisplay={setDisplay} setBoxClicked={setBoxClicked} />
@@ -38,7 +38,7 @@ export default function WeatherDetails({ open, hourly, daily, air, moon, index, 
         <Moon daily={moon} indexD={indexD} setDisplay={setDisplay} setBoxClicked={setBoxClicked} />
       </div>
 
-      {open &&
+      {open && 
         <button onClick={() => {
           setOpen(false)
           clicked(false)

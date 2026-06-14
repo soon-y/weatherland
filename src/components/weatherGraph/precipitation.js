@@ -28,8 +28,8 @@ export default function WeeklyPrecipitation({ display, hourProbability, hourPrec
   }, [indexW])
 
   return (
-    <div className="w-full">
-      <div className="pt-8">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         <div className="flex gap-2 justify-between">
           {
             validIndex ?

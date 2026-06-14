@@ -5,7 +5,7 @@ export default function DailyBarGraphBox({ min, max, step, unit, barStart, barEn
   const today = new Date()
   const todayDay = today.getDay()
   const [val, setVal] = useState([])
-  const topPos = '56px'
+  const topPos = '48px'
   const isTime = barStart[0].includes('T')
   const borderCnt = (max - min) / step
 
@@ -39,9 +39,9 @@ export default function DailyBarGraphBox({ min, max, step, unit, barStart, barEn
 
   return (
     <div className="relative">
-      <div className="w-full grid grid-cols-[1fr_40px] relative z-100">
+      <div className="w-full grid grid-cols-[1fr_24px] relative z-100">
         <div></div>
-        <p className="ml-2 py-2 text-sm opacity-70 flex items-center h-14">{unit}</p>
+        <p className="ml-2 py-2 text-sm opacity-70 flex items-center h-12">{unit}</p>
         {/* Graph */}
         <div className="w-full flex relative" style={{ aspectRatio: ratio }}>
           {Array.from({ length: 7 }).map((_, i) => (
@@ -87,7 +87,7 @@ export default function DailyBarGraphBox({ min, max, step, unit, barStart, barEn
       </div>
 
       {/* Graph grid */}
-      <div className="w-[calc(100%-40px)] absolute flex flex-col" style={{ top: topPos, aspectRatio: ratio }}>
+      <div className="w-[calc(100%-24px)] absolute flex flex-col" style={{ top: topPos, aspectRatio: ratio }}>
         {Array.from({ length: borderCnt }).map((_, i) => (
           <div key={i} className={`w-full opacity-20 border-b flex-1 ${i === 0 && 'border-t'}`} />
         ))}

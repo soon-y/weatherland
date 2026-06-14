@@ -1,10 +1,11 @@
 export function Sunrise({ isDay, sunrise }) {
-  const fill = { fill: isDay ? '#2c2c2c' : '#fff' }
+  const fill = { fill: isDay ? '#000' : '#fff' }
   const stroke = {
     fill: 'none',
-    stroke: isDay ? '#2c2c2c' : '#fff',
+    stroke: isDay ? '#000' : '#fff',
     strokeLinecap: 'round',
-    strokeMiterlimit: 100
+    strokeMiterlimit: 100,
+    strokeWidth: 2,
   }
 
   return (

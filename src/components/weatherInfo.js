@@ -126,7 +126,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           />
 
           <InfoBox isDay={isDay}
-            info2={hourly.apparent_temperature[index]} unit2={'°C'}
+            info1={hourly.apparent_temperature[index]} unit1={'°C'}
             info3={'feels like'}
           />
 

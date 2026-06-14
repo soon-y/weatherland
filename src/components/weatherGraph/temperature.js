@@ -15,8 +15,8 @@ export default function WeeklyTemperature({ display, hourly, indexW, index, hour
   }, [indexW])
 
   return (
-    <div className="w-full">
-      <div className="pt-8 pb-4">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         <div className="flex gap-2 justify-between">
           {
             validIndex ?

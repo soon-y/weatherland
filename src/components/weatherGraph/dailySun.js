@@ -9,8 +9,8 @@ export default function DailySun({ indexW, setIndexW, sunrise, sunset, daylight 
   }
 
   return (
-    <div className="w-full">
-      <div className="pt-8 pb-4">
+    <div className="w-full pb-4">
+      <div className="pt-4 sm:pt-8">
         <div className="flex justify-between">
           <div className="grid grid-cols-[80px_1fr]">
             <span>Sunrise</span>

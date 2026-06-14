@@ -63,7 +63,8 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
           {display === 'air quality' &&
             <WeeklyAirQuality display={display} hourly={air.european_aqi} indexW={indexW} index={index} />
           }
-          {display === 'visibility' && <WeeklyVisibility display={display} hourly={hourly.visibility} indexW={indexW} index={index} />
+          {display === 'visibility' && 
+            <WeeklyVisibility display={display} hourly={hourly.visibility} indexW={indexW} index={index} />
           }
           {display === 'humidity' &&
             <WeeklyHumidity humidity={hourly.relative_humidity_2m} indexW={indexW} index={index} dewPoint={hourly.dew_point_2m} temp={hourly.temperature_2m} />
@@ -106,7 +107,7 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
           setIndexW(indexD)
         }, 300)
       }}
-        className='absolute right-3 top-2 text-white p-2 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
+        className='absolute right-3 bottom-5 text-white p-2 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
       </button>
     </div>
   )

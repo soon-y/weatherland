@@ -63,7 +63,7 @@ function CameraController() {
 
         camera.position.set(
           param.camPos[0] * scale,
-          param.camPos[1],
+          param.camPos[1] * scale,
           param.camPos[2] * scale,)
       } else {
         camera.position.set(...param.camPos)

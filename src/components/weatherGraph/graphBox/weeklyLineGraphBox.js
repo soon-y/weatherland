@@ -7,8 +7,10 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
   const [codes, setCodes] = useState([])
   const graphSize = { w: 300, h: 300 / ratio }
   const borderCnt = (max - min) / step
-  const topPos = '52px'
+  const topPos = ratio == 1 ? '54px' : '42px'
   const today = new Date()
+  const unitWidth = 'grid-cols-[1fr_24px]'
+  const graphWidth = 'w-[calc(100%-24px)]'
   let minIndex, maxIndex, colorRange, offset
 
   if (display === 'feels like' || display === 'temperature') {
@@ -121,8 +123,8 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
 
   return (
     <div className="relative">
-      <div className="w-full grid grid-cols-[1fr_40px]">
-        <div className="py-2 -translate-x-2 flex justify-between items-center h-10">
+      <div className={`w-full grid ${unitWidth}`}>
+        <div className="py-2 -translate-x-2 flex justify-between items-center">
           {codes && display === 'wind' ?
             codes.map((el, i) => (
               <div key={i} className={`text-xs text-center flex-1 translate-y-2 transform ${i !== hoverIndex - indexW * 24 && 'opacity-60'}`}>
@@ -135,10 +137,10 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
               </div>
             ))}
         </div>
-        <p className="ml-1 py-2 text-xs sm:text-sm opacity-70 flex items-center h-14">{unit}</p>
+        <p className={`py-2 text-xs sm:text-sm opacity-70 flex items-center justify-center h-12`}>{unit}</p>
 
         {/* Graph grid */}
-        <div className="w-[calc(100%-40px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
+        <div className={`${graphWidth} absolute flex`} style={{ top: topPos, aspectRatio: ratio }}>
           {indexW === 0 && <div className="absolute h-full bg-black/70" style={{ width: todayProgress(today) + '%' }} />}
 
           {Array.from({ length: 6 }).map((_, i) => (
@@ -146,7 +148,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
           ))}
         </div>
 
-        <div className="w-[calc(100%-40px)] absolute flex flex-col" style={{ top: topPos, aspectRatio: ratio }}>
+        <div className={`${graphWidth} absolute flex flex-col`} style={{ top: topPos, aspectRatio: ratio }}>
           {Array.from({ length: borderCnt }).map((_, i) => (
             <div key={i} className={`w-full opacity-20 border-b flex-1 ${i === 0 && 'border-t'}`} />
           ))}
@@ -210,21 +212,23 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
 
         {/* tick labels */}
         <div className="flex flex-col justify-between text-xs sm:text-sm pl-1"
-          style={{ height: `calc(${100 + (2.5 * ratio)}%)`, transform: `translateY(-${3 * ratio}%)` }}
+          style={{ height: `calc(${100 + (2.5 * ratio)}%)`, transform: `translateY(${-ratio * 1.5 * ratio}%)` }}
         >
           {val.map((el, i) => (
-            <p key={i}>{el}</p>
+            display === 'visibility' ?
+              <p key={i}>{el / 1000}</p> :
+              <p key={i}>{el}</p>
           ))}
         </div>
 
-        <div className="flex justify-between text-xs sm:text-sm w-[104%] -translate-x-[2%]">
+        <div className="flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%]">
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
         </div>
       </div>
 
-      <div className="w-[calc(100%-40px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
+      <div className={`absolute flex ${graphWidth}`} style={{ top: topPos, aspectRatio: ratio }}>
         {Array.from({ length: 24 }).map((_, i) => (
           <div key={i} className={`flex-1 h-full ${i === hoverIndex - indexW * 24 && 'border-l'}`}
             onClick={() => { setHover(indexW * 24 + i) }}

@@ -54,14 +54,14 @@ export default function WeeklyBarGraphBox({ display, hourly, indexW, min, max, s
 
   return (
     <div className="relative">
-      <div className="w-full grid grid-cols-[1fr_40px]">
+      <div className="w-full grid grid-cols-[1fr_24px]">
 
         <div className="py-2 -translate-x-2 flex justify-between items-center h-10">
         </div>
-        <p className="ml-2 py-2 text-sm opacity-70 flex items-center h-14">{unit}</p>
+        <p className="ml-2 py-2 text-xs sm:text-sm opacity-70 flex items-center h-14">{unit}</p>
 
         {/* Graph grid */}
-        <div className="w-[calc(100%-40px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
+        <div className="w-[calc(100%-24px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
           {indexW === 0 && <div className="absolute h-full bg-black/70" style={{ width: todayProgress(today) + '%' }} />}
 
           {Array.from({ length: 6 }).map((_, i) => (
@@ -69,7 +69,7 @@ export default function WeeklyBarGraphBox({ display, hourly, indexW, min, max, s
           ))}
         </div>
 
-        <div className="w-[calc(100%-40px)] absolute flex flex-col" style={{ top: topPos, aspectRatio: ratio }}>
+        <div className="w-[calc(100%-24px)] absolute flex flex-col" style={{ top: topPos, aspectRatio: ratio }}>
           {Array.from({ length: borderCnt }).map((_, i) => (
             <div key={i} className={`w-full opacity-20 border-b flex-1 ${i === 0 && 'border-t'}`} />
           ))}
@@ -88,22 +88,22 @@ export default function WeeklyBarGraphBox({ display, hourly, indexW, min, max, s
         </div>
 
         {/* tick labels */}
-        <div className="flex flex-col justify-between text-sm pl-2"
-          style={{ height: `calc(${100 + (5 * ratio)}%)`, transform: `translateY(-${3 * ratio}%)` }}
+        <div className="flex flex-col justify-between text-xs sm:text-sm pl-2"
+          style={{ height: `calc(${100 + (5 * ratio)}%)`, transform: `translateY(-${2 * ratio}%)` }}
         >
           {val.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
         </div>
 
-        <div className="flex justify-between mt-1 text-sm w-[104%] -translate-x-[2%]">
+        <div className="flex justify-between mt-1 text-xs sm:text-sm w-[104%] -translate-x-[2%]">
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
         </div>
       </div>
 
-      <div className="w-[calc(100%-40px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
+      <div className="w-[calc(100%-24px)] absolute flex" style={{ top: topPos, aspectRatio: ratio }}>
         {Array.from({ length: 24 }).map((_, i) => (
           <div key={i} className={`flex-1 h-full ${i === hoverIndex - indexW * 24 && 'border-l'}`}
             onClick={() => { setHover(indexW * 24 + i) }}
