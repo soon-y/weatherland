@@ -1,4 +1,4 @@
-import { airColorList, airOffsets, getWindDirectionArrow, pressureColorList, pressureOffsets, rainColorList, tempColorIndex, tempColorList, todayProgress, uvColorList, uvOffsets, visibilityColorList, visibilityOffsets, weatherIcon, weatherInfo, windColorList, windOffsets } from "@/lib/param"
+import { airColorList, airOffsets, getWindDirectionArrow, pressureColorList, pressureOffsets, rainColorList, tempColorIndex, tempColorList, todayProgress, uvColorList, uvOffsets, visibilityColorList, visibilityOffsets, weatherInfo, windColorList, windOffsets } from "@/lib/param"
 import { useEffect, useState } from "react"
 
 export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, step, unit, index, code, hourly2, hoverIndex, setHover, ratio = 1, isDay }) {
@@ -155,12 +155,12 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
         </div>
 
         {/* Graph */}
-        <div className={`w-full`} style={{ aspectRatio: ratio, transform: `translateX(-1.5%) translateY(${-1 * ratio}%)` }}>
+        <div className={`w-full`} style={{ aspectRatio: ratio, transform: `translateX(-1.5%) translateY(${6 - 4 * ratio}%)` }}>
           <svg width='98%' height='101%' className="z-10 relative" viewBox={`-5 -5 ${graphSize.w + 10} ${graphSize.h + 10}`}>
 
             {colorRange &&
               <defs>
-                <linearGradient id="color" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
+                <linearGradient id="gradientColor" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
                   {colorRange.map((color, i) => (
                     <stop
                       key={i}
@@ -197,13 +197,13 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
               <path
                 d={getSmoothPath(points()).d}
                 fill="none"
-                stroke={'url(#color)'}
+                stroke={'url(#gradientColor)'}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {points().map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="3" fill={'url(#color)'} />
+                <circle key={i} cx={p.x} cy={p.y} r="3" fill={'url(#gradientColor)'} />
               ))}
             </g>
 
@@ -216,12 +216,12 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
         >
           {val.map((el, i) => (
             display === 'visibility' ?
-              <p key={i}>{el / 1000}</p> :
+              <p key={i}>{Math.round(el / 1000)}</p> :
               <p key={i}>{el}</p>
           ))}
         </div>
 
-        <div className="flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%]">
+        <div className={`flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%] ${ratio==1 && 'mt-1'}`}>
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
