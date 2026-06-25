@@ -96,7 +96,7 @@ export default function WeeklyBarGraphBox({ display, hourly, indexW, min, max, s
           ))}
         </div>
 
-        <div className="flex justify-between mt-1 text-xs sm:text-sm w-[104%] -translate-x-[2%]">
+        <div className="flex justify-between mt-2 text-xs sm:text-sm w-[103%] -translate-x-[2%]">
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
