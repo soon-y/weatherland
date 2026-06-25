@@ -22,7 +22,7 @@ export default function WeatherDetails({ open, hourly, daily, air, moon, index, 
 
   return (
     <div>
-      <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} ${open ? 'opacity-100' : 'opacity-0'}
+      <div className={`scrollbar-hide ${param.weatherBoxheight} ${param.weatherBoxStyles} ${open ? 'opacity-100' : 'opacity-0'}
         flex flex-wrap content-start items-start overflow-scroll gap-3 p-2 pt-[1px] sm:p-4 pb-12 duration-500
         `}>
         <Forecast daily={daily} hourly={hourly} index={index} indexD={indexD} setDisplay={setDisplay} setBoxClicked={setBoxClicked} />

@@ -146,7 +146,7 @@ export default function Slider({ hourly, setIndex, index }) {
       </div>
 
       <div ref={ref} onScrollEnd={handleScroll}
-        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none overflow-hidden`}>
+        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none overflow-hidden scrollbar-hide`}>
         {hourlyData.map((el, i) => (
           <div key={i} onClick={() => setIndex(i)}
             className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10

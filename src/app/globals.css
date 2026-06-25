@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 :root {
   --background: #101B29;
   --foreground: #171717;
@@ -97,8 +106,4 @@ body {
 canvas {
   width: 100vw;
   height: 100vh;
-}
-
-::-webkit-scrollbar {
-  display: none;
 }
