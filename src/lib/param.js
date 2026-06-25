@@ -28,7 +28,7 @@ export const param = {
   weatherDesc: 'text-xs/4 sm:text-sm/5',
   weatherDescMain: 'text-lg sm:text-2xl font-semibold',
   weatherDescSub: 'text-sm/5 sm:text-base/6',
-  weatherBoxheight: 'h-[calc(100vh-40px)]',
+  weatherBoxheight: 'h-[calc(100dvh-40px)]',
   weatherBoxStyles: 'fixed top-12 w-full min-w-[340px] sm:px-[calc((100%-600px)/2)] sm:left-1/2 sm:-translate-x-1/2',
   rainColor: '#7bc1ff',
   max: (arr) => { return Math.ceil(Math.max(...arr) / 10) * 10 },

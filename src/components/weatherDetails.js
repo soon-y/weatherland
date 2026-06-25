@@ -43,7 +43,7 @@ export default function WeatherDetails({ open, hourly, daily, air, moon, index, 
           setOpen(false)
           clicked(false)
         }}
-          className='fixed right-3 bottom-3 text-white p-2 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
+          className='absolute right-3 bottom-3 text-white p-2 bg-black/50 outline outline-black rounded-full cursor-pointer'><X />
         </button>}
 
       <WeeklyBox
