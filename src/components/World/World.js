@@ -7,6 +7,7 @@ import { useEffect, useState, Suspense } from "react"
 import WorldGround from "./Ground"
 import Environment from "./environment"
 import Loading from "@/components/loading"
+import { Perf } from "r3f-perf"
 
 function World({ hourly, daily, index }) {
   const [indexD, setIndexD] = useState(0)
@@ -31,6 +32,7 @@ function World({ hourly, daily, index }) {
         physicallyCorrectLights: true,
       }}
     >
+      {isDebug && <Perf position="top-left"/>}
       <Suspense fallback={<Loading />}>
         <OrbitControls
           target={param.worldPos}
