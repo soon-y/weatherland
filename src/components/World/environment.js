@@ -85,6 +85,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   }, [index, indexD])
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     const gustCycle = isDebug ? period : 20
     const gustDuration = isDebug ? duration : 3
 
