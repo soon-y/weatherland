@@ -41,7 +41,7 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
 
   return (
     <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} px-2 duration-500 ease-in-out ${boxClicked ? 'top-12 opacity-100' : 'top-[100%] opacity-0'}`}>
-      <div className={`h-full w-full rounded-t-xl backdrop-blur-2xl bg-black/80 overflow-y-scroll select-none`}>
+      <div className={`h-full w-full rounded-t-xl backdrop-blur-2xl bg-black/80 overflow-y-scroll select-none scrollbar-hide`}>
         <div className="px-4 py-4 sm:py-6 sm:px-16">
           <div className="mb-4 flex justify-center">
             <BoxTitle title={isNumber ? 'temperature' : display} />
