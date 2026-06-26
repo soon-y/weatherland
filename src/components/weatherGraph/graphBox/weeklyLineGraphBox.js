@@ -221,7 +221,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
           ))}
         </div>
 
-        <div className={`flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%] ${ratio==1 && 'mt-1'}`}>
+        <div className={`flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%] ${ratio==1 && 'mt-2'}`}>
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}
