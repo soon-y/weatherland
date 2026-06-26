@@ -39,7 +39,7 @@ export default function Home() {
   }, [lat, lon, timezone, offset])
 
   return (
-    <div className='w-[100vw] h-[100vh]'>
+    <div className='w-screen h-dvh overflow-hidden'>
       <World hourly={hourlyData} daily={dailyData} index={index} />
 
       <div className='fixed bottom-0 w-full p-2'>
