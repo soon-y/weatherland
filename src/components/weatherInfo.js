@@ -74,7 +74,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
         />
       </div>
 
-      <motion.div layout onClick={() => {
+      <div onClick={() => {
         setOpen(true)
         clicked(true)
       }}
@@ -83,7 +83,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           ${!open && "hover:outline cursor-pointer "}
           ${!open && (isDay ? "hover:outline-black/50" : "hover:outline-white/50")}
       `}>
-        <div className={`flex gap-2 items-center h-8 duration-500 ${!open && 'justify-between'}
+        <div className={`flex w-full gap-2 items-center h-8 duration-500 
+        ${!open && 'justify-between'}
           ${isDay && !open ? 'text-black' : 'text-white'}`}
         >
           <p className='font-bold text-base sm:text-lg'>{
@@ -102,8 +103,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           </div>
         </div>
 
-        <div className={`grid gap-1 duration-500
-          ${!open ? 'opacity-100' : 'opacity-0'} 
+        <motion.div layout className={`grid gap-1 duration-500
+          ${open && 'hidden'} 
           ${isDay ? 'text-black' : 'text-white'}`}
         >
           <div className='grid grid-cols-[28px_1fr_28px] sm:grid-cols-[32px_1fr_32px] gap-2 items-center justify-center'>
@@ -174,8 +175,8 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
             info1={sunriseNext.split('T')[1]}
             condition={sunsetTimeToday <= now}
           />
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   )
 }
