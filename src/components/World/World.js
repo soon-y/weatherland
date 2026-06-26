@@ -8,6 +8,7 @@ import WorldGround from "./Ground"
 import Environment from "./environment"
 import Loading from "@/components/loading"
 import { Perf } from "r3f-perf"
+import * as THREE from 'three'
 
 function World({ hourly, daily, index }) {
   const [indexD, setIndexD] = useState(0)
@@ -26,13 +27,14 @@ function World({ hourly, daily, index }) {
       far: 100,
       position: param.camPos,
     }}
-      gl={{
-        antialias: true,
-        toneMappingExposure: 1,
-        physicallyCorrectLights: true,
+      onCreated={({ gl }) => {
+        gl.outputColorSpace = THREE.SRGBColorSpace
+        gl.toneMapping = THREE.ACESFilmicToneMapping
+        gl.shadowMap.enabled = true
+        gl.shadowMap.type = THREE.PCFSoftShadowMap
       }}
     >
-      {isDebug && <Perf position="top-left"/>}
+      {isDebug && <Perf position="top-left" />}
       <Suspense fallback={<Loading />}>
         <OrbitControls
           target={param.worldPos}
