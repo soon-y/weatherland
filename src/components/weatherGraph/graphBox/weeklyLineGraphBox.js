@@ -1,5 +1,5 @@
 import { airColorList, airOffsets, getWindDirectionArrow, pressureColorList, pressureOffsets, rainColorList, tempColorIndex, tempColorList, todayProgress, uvColorList, uvOffsets, visibilityColorList, visibilityOffsets, weatherInfo, windColorList, windOffsets } from "@/lib/param"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, step, unit, index, code, hourly2, hoverIndex, setHover, ratio = 1, isDay }) {
   const [val, setVal] = useState([])
@@ -42,6 +42,11 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
     colorRange = rainColorList
   }
   else colorRange = ['white']
+
+  const gradientId = useMemo(
+    () => `color-${crypto.randomUUID()}`,
+    [colorRange]
+  )
 
   useEffect(() => {
     const temp = []
@@ -160,7 +165,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
 
             {colorRange &&
               <defs>
-                <linearGradient id="gradientColor" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
+                <linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
                   {colorRange.map((color, i) => (
                     <stop
                       key={i}
@@ -197,13 +202,13 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
               <path
                 d={getSmoothPath(points()).d}
                 fill="none"
-                stroke={'url(#gradientColor)'}
+                stroke={`url(#${gradientId})`}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {points().map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="3" fill={'url(#gradientColor)'} />
+                <circle key={i} cx={p.x} cy={p.y} r="3" fill={`url(#${gradientId})`} />
               ))}
             </g>
 
@@ -221,7 +226,7 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
           ))}
         </div>
 
-        <div className={`flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%] ${ratio==1 && 'mt-2'}`}>
+        <div className={`flex justify-between text-xs sm:text-sm w-[103%] -translate-x-[2%] ${ratio == 1 && 'mt-2'}`}>
           {time.map((el, i) => (
             <p key={i}>{el}</p>
           ))}

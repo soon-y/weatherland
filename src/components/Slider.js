@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useMemo } from "react"
 import WeatherIcon from "./weatherIcon"
 import { isMobile, param, tempColorIndex, tempColorList, todayProgress } from "@/lib/param"
 
@@ -72,6 +72,11 @@ export default function Slider({ hourly, setIndex, index }) {
       setHourlyData(tempArr)
     }
   }, [hourly])
+
+  const gradientId = useMemo(
+    () => `color-${crypto.randomUUID()}`,
+    [colorRange]
+  )
 
   const points = (data) => {
     let x, y
@@ -178,7 +183,7 @@ export default function Slider({ hourly, setIndex, index }) {
         }}>
           <svg width='100%' height='100%' className="relative overflow-visible" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
             <defs>
-              <linearGradient id="gradientColor" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
+              <linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
                 {colorRange.map((color, i) => (
                   <stop
                     key={i}
@@ -198,13 +203,13 @@ export default function Slider({ hourly, setIndex, index }) {
               <path
                 d={getSmoothPath(ptsTemp).d}
                 fill="none"
-                stroke={'url(#gradientColor)'}
+                stroke={`url(#${gradientId})`}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {ptsTemp.map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#gradientColor)'} />
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={`url(#${gradientId})`} />
               ))}
             </g>
 
@@ -212,13 +217,13 @@ export default function Slider({ hourly, setIndex, index }) {
               <path
                 d={getSmoothPath(ptsFeels).d}
                 fill="none"
-                stroke={'url(#gradientColor)'}
+                stroke={`url(#${gradientId})`}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {ptsFeels.map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#gradientColor)'} stroke="rgba(255,255,255,0.6)" />
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={`url(#${gradientId})`} stroke="rgba(255,255,255,0.6)" />
               ))}
             </g>
           </svg>
