@@ -44,7 +44,7 @@ export default function Home() {
 
       <div className='fixed bottom-0 w-full p-2'>
         {hourlyData ?
-          <Slider hourly={hourlyData} setIndex={setIndex} index={index} />
+          <Slider hourly={hourlyData} setIndex={setIndex} index={index} timezone={timezone}/>
           :
           <div className={`${param.sliderStyles} animate-pulse opacity-40`} style={{ height: param.sliderHeight + 'px' }}>
           </div>

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useMemo } from "react"
 import WeatherIcon from "./weatherIcon"
 import { isMobile, param, tempColorIndex, tempColorList, todayProgress } from "@/lib/param"
 
-export default function Slider({ hourly, setIndex, index }) {
+export default function Slider({ hourly, setIndex, index, timezone }) {
   const today = new Date()
   const ref = useRef(null)
   const [boxWidth, setBoxWidth] = useState(0)
@@ -24,10 +24,6 @@ export default function Slider({ hourly, setIndex, index }) {
   const isDay = hourly.is_day[index]
 
   useEffect(() => {
-    const currentHour = new Date().getHours()
-    setIndex(currentHour)
-    setTime(currentHour)
-
     const handleResize = () => {
       const windowWidth = window.innerWidth - 16
       const divide = windowWidth > 1000 ? 10 : isMobile(windowWidth) ? 6 : 4
@@ -44,6 +40,24 @@ export default function Slider({ hourly, setIndex, index }) {
       window.removeEventListener("resize", handleResize)
     }
   }, [])
+
+  useEffect(() => {
+    if (!timezone) return
+
+    const decodedTimezone = decodeURIComponent(timezone)
+    console.log(decodedTimezone)
+
+    const currentHour = Number(
+      new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        hour12: false,
+        timeZone: decodedTimezone,
+      }).format(new Date())
+    )
+
+    setIndex(currentHour)
+    setTime(currentHour)
+  }, [hourly])
 
   useEffect(() => {
     if (!ref.current || index > 168 - 6) return
