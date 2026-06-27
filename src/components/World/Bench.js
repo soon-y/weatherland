@@ -137,9 +137,9 @@ export function Bench(props) {
         receiveShadow
         geometry={nodes.Text.geometry}
         material={materials.gold}
-        position={[0, 1.187, -0.002]}
+        position={[0, 1.211, -0.007]}
         rotation={[1.257, 0, 0]}
-        scale={[0.038, 0.158, 0.038]}
+        scale={[0.076, 0.32, 0.076]}
       />
       <mesh
         castShadow
@@ -410,45 +410,45 @@ export function Bench(props) {
         receiveShadow
         geometry={nodes.plaque.geometry}
         material={materials.benchBlack}
-        position={[0, 1.162, -0.01]}
+        position={[0, 1.165, -0.01]}
         rotation={[1.259, 0, 0]}
-        scale={[0.177, 0.011, 0.058]}
+        scale={[0.353, 0.023, 0.105]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.metal016.geometry}
         material={materials.benchMetal}
-        position={[0.164, 1.206, -0.018]}
+        position={[0.335, 1.211, -0.007]}
         rotation={[1.265, -Math.PI / 2, 0]}
-        scale={0.006}
+        scale={0.009}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.metal017.geometry}
         material={materials.benchMetal}
-        position={[-0.163, 1.206, -0.018]}
+        position={[-0.335, 1.211, -0.007]}
         rotation={[1.265, -Math.PI / 2, 0]}
-        scale={0.006}
+        scale={0.009}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.metal018.geometry}
         material={materials.benchMetal}
-        position={[0.164, 1.122, 0.01]}
+        position={[0.335, 1.118, 0.022]}
         rotation={[1.265, -Math.PI / 2, 0]}
-        scale={0.006}
+        scale={0.009}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.metal019.geometry}
         material={materials.benchMetal}
-        position={[-0.163, 1.122, 0.01]}
+        position={[-0.335, 1.118, 0.021]}
         rotation={[1.265, -Math.PI / 2, 0]}
-        scale={0.006}
+        scale={0.009}
       />
     </group>
   )
