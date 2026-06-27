@@ -22,7 +22,7 @@ export default function Forecast({ daily, hourly, index, indexD, setDisplay, set
       })
       setWeedkly(weeklyArr)
     }
-  }, [])
+  }, [daily])
 
   const barRange = (min, max) => {
     const globalMin = Math.min(...daily.temperature_2m_min)
