@@ -27,9 +27,9 @@ export default function Input({
   return (
     <div>
       <div
-        onClick={() => { if(!hide) setOpen(true)}}
+        onClick={() => { if (!hide) setOpen(true) }}
         className={`flex bg-white/40 backdrop-blur-lg py-1 px-2 rounded-full text-black 
-          ${!hide? 'cursor-pointer' : ''}
+          ${!hide && 'cursor-pointer'}
           ${label == 'Region' ? 'font-bold text-base sm:text-lg' : 'text-xs sm:text-base '}   
       `}>
         {value}{unit}
@@ -83,27 +83,36 @@ export default function Input({
               </div>
             </div> :
             <div className={`${styles} grid gap-2 sm:gap-x-3 sm:gap-y-4 items-center`}>
-              <input
-                type='text'
-                value={tempSub}
-                onChange={(e) => setTempSub(e.target.value)}
-                placeholder={'Place'}
-                className={`${inputStyles}`}
-              />
-              <input
-                type='text'
-                value={tempPost}
-                onChange={(e) => setTempPost(e.target.value)}
-                placeholder={'Postcode'}
-                className={`${inputStyles}`}
-              />
-              <input
-                type='text'
-                value={tempCo}
-                onChange={(e) => setTempCo(e.target.value)}
-                placeholder={'Country'}
-                className={`${inputStyles}`}
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-white font-bold">Area</label>
+                <input
+                  type='text'
+                  value={tempSub}
+                  onChange={(e) => setTempSub(e.target.value)}
+                  placeholder={'Place'}
+                  className={`${inputStyles}`}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-white font-bold">Postcode</label>
+                <input
+                  type='text'
+                  value={tempPost}
+                  onChange={(e) => setTempPost(e.target.value)}
+                  placeholder={'Postcode'}
+                  className={`${inputStyles}`}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-white font-bold">Country</label>
+                <input
+                  type='text'
+                  value={tempCo}
+                  onChange={(e) => setTempCo(e.target.value)}
+                  placeholder={'Country'}
+                  className={`${inputStyles}`}
+                />
+              </div>
 
               <div className="mt-2 sm:mt-4 grid gap-0 sm:gap-2">
                 <button
