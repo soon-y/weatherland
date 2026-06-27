@@ -49,7 +49,7 @@ export default function Forecast({ daily, hourly, index, indexD, setDisplay, set
     const globalMin = Math.min(...daily.temperature_2m_min)
     const globalMax = Math.max(...daily.temperature_2m_max)
     const range = globalMax - globalMin
-    const left = ((hourly.temperature_2m[index] - globalMin) / range) * 90
+    const left = ((hourly.temperature_2m[index] - globalMin) / range) * 97
 
     return {
       left: `${left}%`,
@@ -70,14 +70,14 @@ export default function Forecast({ daily, hourly, index, indexD, setDisplay, set
               <WeatherIcon code={el.code} probability={el.probability} />
             </div>
             <p className={`col-span-1 text-sm sm:text-base text-center ${i == indexD && 'font-bold'}`}>{el.min}°</p>
-            <div className={`col-span-3 sm:col-span-4 relative h-2 rounded-full ${i == indexD ? 'bg-black/40' : 'bg-black/20'}`}>
+            <div className={`col-span-3 sm:col-span-4 relative h-2 rounded-full overflow-hidden ${i == indexD ? 'bg-black/40' : 'bg-black/20'}`}>
               <div
                 className="absolute inset-0 rounded-full"
                 style={barRange(el.min, el.max)}
               />
               {i == indexD &&
                 <div
-                  className="absolute rounded-full h-2 outline-2 outline-black/50 aspect-square shadow-sm bg-white"
+                  className="absolute rounded-full h-2 outline-2 outline-black/70 aspect-square shadow-sm bg-white"
                   style={currentTemp()}
                 />
               }
