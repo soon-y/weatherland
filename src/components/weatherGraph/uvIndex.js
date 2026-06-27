@@ -16,7 +16,11 @@ export default function WeeklyUVindex({ display, hourly, indexW, index, daily1 }
     <div className="w-full pb-4">
       <div className="pt-4 sm:pt-8">
         {
-          validIndex ? <span>{hoverIndex - indexW * 24}:00</span> : <span>Average</span>
+          validIndex ?
+            <span>{hoverIndex - indexW * 24}:00</span> :
+            indexW < 5 ?
+              <span>Average</span> :
+              <div>UV Index forecast</div>
         }
 
         <div className="text-2xl flex gap-2 justify-between">
@@ -27,10 +31,15 @@ export default function WeeklyUVindex({ display, hourly, indexW, index, daily1 }
                 <span>{current}</span>
               </>
               :
-              <>
-                <span className="font-bold">{uvIndex(daily1[indexW]).state}</span>
-                <span>{daily1[indexW]}</span>
-              </>
+              indexW < 5 ?
+                <>
+                  <span className="font-bold">{uvIndex(daily1[indexW]).state}</span>
+                  <span>{daily1[indexW]}</span>
+                </>
+                :
+                <>
+                  <span>available for 5 days</span>
+                </>
           }
         </div>
       </div>

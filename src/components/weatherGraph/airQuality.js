@@ -28,7 +28,11 @@ export default function WeeklyAirQuality({ display, hourly, indexW, index }) {
     <div className="w-full pb-4">
       <div className="pt-4 sm:pt-8">
         {
-          validIndex ? <span>{hoverIndex - indexW * 24}:00</span> : <span>Average</span>
+          validIndex ?
+            <span>{hoverIndex - indexW * 24}:00</span> :
+            indexW < 5 ?
+              <span>Average</span> :
+              <div>Air quality forecast</div>
         }
 
         <div className="text-2xl flex gap-2">
@@ -39,10 +43,15 @@ export default function WeeklyAirQuality({ display, hourly, indexW, index }) {
                 <span>{current}</span>
               </>
               :
-              <>
-                <span className="font-bold">{airQuality(avg[indexW]).state}</span>
-                <span>{avg[indexW]}</span>
-              </>
+              indexW < 5 ?
+                <>
+                  <span className="font-bold">{airQuality(avg[indexW]).state}</span>
+                  <span>{avg[indexW]}</span>
+                </>
+                :
+                <>
+                  <span>available for 5 days</span>
+                </>
           }
         </div>
       </div>

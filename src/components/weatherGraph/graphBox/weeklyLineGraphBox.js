@@ -87,6 +87,8 @@ export default function WeeklyLineGraphBox({ display, hourly, indexW, min, max, 
     const start = indexW * 24
 
     for (let i = start; i < start + 24; i++) {
+      if (hourly[i] == null) continue
+
       const localIndex = i - start
       x = (localIndex / 23) * graphSize.w
       y = graphSize.h - ((hourly[i] - min) / (max - min)) * graphSize.h
