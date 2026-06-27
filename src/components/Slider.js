@@ -16,8 +16,8 @@ export default function Slider({ hourly, setIndex, index }) {
   const graphSize = { w: graphWidth, h: sliderHeight * 0.3 }
   const temp = hourly.temperature_2m
   const feels = hourly.apparent_temperature
-  const max = Math.max(...temp, ...feels) + 3
-  const min = Math.min(...temp, ...feels) - 3
+  const max = Math.max(...temp, ...feels) + 5
+  const min = Math.min(...temp, ...feels) - 5
   const minIndex = tempColorIndex(min)
   const maxIndex = tempColorIndex(max)
   const colorRange = tempColorList.slice(minIndex, maxIndex + 1)
@@ -146,7 +146,7 @@ export default function Slider({ hourly, setIndex, index }) {
       </div>
 
       <div ref={ref} onScrollEnd={handleScroll}
-        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none overflow-hidden scrollbar-hide`}>
+        className={`${param.sliderStyles} flex overflow-x-auto snap-x snap-mandatory scroll-smooth select-none  scrollbar-hide`}>
         {hourlyData.map((el, i) => (
           <div key={i} onClick={() => setIndex(i)}
             className={`flex-shrink-0 snap-start flex flex-col relative cursor-pointer duration-500 hover:bg-white/10
@@ -172,13 +172,13 @@ export default function Slider({ hourly, setIndex, index }) {
 
         {/* graph */}
         <div className="absolute cursor-pointer" onClick={handleClick} onMouseMove={handleHover} onMouseLeave={() => setHover(null)} style={{
-          top: '43px', left: boxWidth / 2,
+          top: '44px', left: boxWidth / 2,
           height: sliderHeight * 0.35 + 'px',
           width: boxWidth * 167,
         }}>
-          <svg width='100%' height='100%' className="relative" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
+          <svg width='100%' height='100%' className="relative overflow-visible" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
             <defs>
-              <linearGradient id="color" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
+              <linearGradient id="gradientColor" gradientUnits="userSpaceOnUse" x1="0" y1="100%" x2="0" y2="0">
                 {colorRange.map((color, i) => (
                   <stop
                     key={i}
@@ -198,13 +198,13 @@ export default function Slider({ hourly, setIndex, index }) {
               <path
                 d={getSmoothPath(ptsTemp).d}
                 fill="none"
-                stroke={'url(#color)'}
+                stroke={'url(#gradientColor)'}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {ptsTemp.map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#color)'} />
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#gradientColor)'} />
               ))}
             </g>
 
@@ -212,13 +212,13 @@ export default function Slider({ hourly, setIndex, index }) {
               <path
                 d={getSmoothPath(ptsFeels).d}
                 fill="none"
-                stroke={'url(#color)'}
+                stroke={'url(#gradientColor)'}
                 strokeWidth="2"
                 className="opacity-50"
               />
 
               {ptsFeels.map((p, i) => (
-                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#color)'} stroke="rgba(255,255,255,0.6)" />
+                <circle key={i} cx={p.x} cy={p.y} r="4" fill={'url(#gradientColor)'} stroke="rgba(255,255,255,0.6)" />
               ))}
             </g>
           </svg>
