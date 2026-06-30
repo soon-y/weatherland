@@ -5,6 +5,7 @@ import { Bench } from './Bench'
 import { useControls } from "leva"
 import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { Post } from './post'
 
 export default function WorldGround({ store, hourly, index }) {
   const { nodes, materials } = useGLTF('models/land.glb')
@@ -411,6 +412,7 @@ export default function WorldGround({ store, hourly, index }) {
       />
 
       <Bench snowDepth={snowDepth} />
+      <Post snowDepth={snowDepth} />
     </group>
   )
 }
