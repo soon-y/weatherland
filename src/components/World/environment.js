@@ -12,6 +12,7 @@ import Rain from './rain'
 import Snow from './snow'
 import Mist from './mist'
 import MistOverlay from './mistOverlay'
+import { Umbrella } from './umbrella'
 
 export default function Environment({ store, hourly, daily, index, indexD }) {
   const [sunProgress, setSunProgress] = useState(0)
@@ -148,6 +149,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
       <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <MistOverlay visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
+      <Umbrella precipitation={isDebug ? rain : rainH} snowDepth={isDebug ? depth : snowDepth} />
     </>
   )
 }
