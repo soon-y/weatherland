@@ -13,12 +13,15 @@ import Snow from './snow'
 import Mist from './mist'
 import MistOverlay from './mistOverlay'
 import { Umbrella } from './umbrella'
+import { Thermometer } from './thermometer'
 
 export default function Environment({ store, hourly, daily, index, indexD }) {
   const [sunProgress, setSunProgress] = useState(0)
   const [windDirH, setWindDirH] = useState(0)
   const [windSpdH, setWindSpdH] = useState(0)
   const [gustsSpdH, setGustsSpdH] = useState(0)
+  const [temperatureH, setTemperatureH] = useState(0)
+  const [precipitationH, setPrecipitationH] = useState(0)
   const [rainH, setRainH] = useState(0)
   const [snowH, setSnowH] = useState(0)
   const [visibilityH, setVisibility] = useState(5000)
@@ -30,14 +33,16 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const finalWindSpd = useRef(0)
   const finalWindDir = useRef(0)
 
-  const { progress, visibility } = useControls('Day', {
+  const { progress, visibility, temperature } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
     visibility: { value: 5000, min: 100, max: 5000, step: 100 },
+    temperature: { value: 10, min: -50, max: 50, step: 1 },
   }, { store })
 
-  const { rain, snow } = useControls('Precipitation', {
+  const { rain, snow, precipitation } = useControls('Precipitation', {
     rain: { value: 0, min: 0, max: 10, step: 0.1 },
     snow: { value: 0, min: 0, max: 10, step: 0.1 },
+    precipitation: { value: 0, min: 0, max: 10, step: 0.1 },
   }, { store })
 
   const { direction, speed } = useControls('Wind', {
@@ -83,6 +88,8 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     setSnowH(hourly.snowfall[index])
     setVisibility(hourly.visibility[index])
     setSnowDepth(hourly.snow_depth[index])
+    setPrecipitationH(hourly.precipitation[index])
+    setTemperatureH(hourly.apparent_temperature[index])
   }, [index, indexD])
 
   useFrame((_, delta) => {
@@ -149,7 +156,8 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
       <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <MistOverlay visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <Umbrella precipitation={isDebug ? rain : rainH} snowDepth={isDebug ? depth : snowDepth} />
+      <Umbrella precipitation={isDebug ? precipitation : precipitationH} />
+      <Thermometer temp={isDebug ? temperature : temperatureH} snowDepth={isDebug ? depth : snowDepth} />
     </>
   )
 }
