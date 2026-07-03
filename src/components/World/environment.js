@@ -20,7 +20,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const [windDirH, setWindDirH] = useState(0)
   const [windSpdH, setWindSpdH] = useState(0)
   const [gustsSpdH, setGustsSpdH] = useState(0)
-  const [temperatureH, setTemperatureH] = useState(0)
+  const [temperatureH, setTemperatureH] = useState(null)
   const [precipitationH, setPrecipitationH] = useState(0)
   const [rainH, setRainH] = useState(0)
   const [snowH, setSnowH] = useState(0)

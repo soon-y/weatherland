@@ -25,8 +25,16 @@ export function Thermometer({ temp, snowDepth }) {
 
   useEffect(() => {
     if (!liquidMaterialRef.current) return
-
+  
     let face
+    const visible = temp != null
+
+    screenRef.current.forEach(material => {
+      if (!material) return
+
+      material.transparent = true
+      material.opacity = visible ? 1 : 0
+    })
 
     if (temp < 0) {
       face = freezeFace
@@ -83,7 +91,7 @@ export function Thermometer({ temp, snowDepth }) {
     )
 
     const targetScale = THREE.MathUtils.mapLinear(
-      temp, -50, 50, -0.04, 0.04
+      temp ?? 0, -50, 50, -0.04, 0.04
     )
 
     liquidRef.current.scale.y = THREE.MathUtils.lerp(
@@ -165,7 +173,7 @@ export function Thermometer({ temp, snowDepth }) {
         geometry={nodes.liquid.geometry}
         material={nodes.liquid.material}
         position={[0.06, 0.665, -0.001]}
-        scale={[0.004, 0.04, 0.004]}
+        scale={[0.004, 0, 0.004]}
       >
         <meshBasicMaterial
           ref={liquidMaterialRef}
