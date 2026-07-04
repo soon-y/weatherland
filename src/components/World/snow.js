@@ -30,6 +30,7 @@ export default function Snow({ windDir, windSpd, precipitation, isDay }) {
   }, [])
 
   useFrame((state, delta) => {
+    delta = Math.min(delta, 0.05)
     if (!meshRef.current) return
 
     if (precipitation <= 0) {

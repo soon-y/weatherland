@@ -23,6 +23,7 @@ export function Windvane({ windDir, windSpd, snowDepth }) {
 
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     const arrow = arrowRef.current
     const anemometer = anemometerRef.current
 

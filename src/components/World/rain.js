@@ -27,6 +27,7 @@ export default function Rain({ windDir, windSpd, precipitation, isDay }) {
   }, [])
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     if (!meshRef.current) return
 
     if (precipitation <= 0) {

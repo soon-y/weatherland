@@ -66,6 +66,7 @@ export default function Mist({ visibility, isDay }) {
   )
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     if (
       !pointsRef.current ||
       !materialRef.current

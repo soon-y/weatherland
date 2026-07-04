@@ -56,6 +56,7 @@ export default function MistOverlay({ visibility, isDay }) {
   )
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     if (!meshRef.current || !matRef.current) return
 
     matRef.current.uniforms.uTime.value += delta

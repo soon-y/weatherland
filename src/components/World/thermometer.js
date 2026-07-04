@@ -64,6 +64,7 @@ export function Thermometer({ temp, snowDepth }) {
   }, [temp])
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     if (!liquidRef.current || !snowRef.current || !snowScreenRef.current) return
 
     const targetBtomScaleY = THREE.MathUtils.clamp(
