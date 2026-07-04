@@ -6,7 +6,6 @@ import { useFrame } from "@react-three/fiber"
 import Light from "./light"
 
 export default function WorldSky({ progress, snowDepth }) {
-  const currentProgress = useRef(0)
   const skyRayleigh = useRef(0)
   const skyRef = useRef()
   const sun = useRef(new THREE.Vector3())
@@ -15,21 +14,14 @@ export default function WorldSky({ progress, snowDepth }) {
     const sky = skyRef.current
     if (!sky) return
 
-    let targetProgress = progress
-    let diff = targetProgress - currentProgress.current
-    let targetRayleigh = getRayValue(targetProgress)
-
-    if (diff > 0.5) diff -= 1
-    if (diff < -0.5) diff += 1
-
-    targetProgress = currentProgress.current + diff
-    currentProgress.current += (targetProgress - currentProgress.current) * 0.05
-    const pos = getSunPosition(currentProgress.current)
+    let targetRayleigh = getRayValue(progress)
+  
+    const pos = getSunPosition(progress)
     sun.current.fromArray(pos)
 
     skyRayleigh.current += (targetRayleigh - skyRayleigh.current) * 0.05
     sky.material.uniforms.rayleigh.value = skyRayleigh.current
-
+    
     sky.material.uniforms.sunPosition.value.copy(sun.current)
   })
 

@@ -17,6 +17,7 @@ import { Thermometer } from './thermometer'
 
 export default function Environment({ store, hourly, daily, index, indexD }) {
   const [sunProgress, setSunProgress] = useState(0)
+  const [animatedProgress, setAnimatedProgress] = useState(0)
   const [windDirH, setWindDirH] = useState(0)
   const [windSpdH, setWindSpdH] = useState(0)
   const [gustsSpdH, setGustsSpdH] = useState(0)
@@ -32,6 +33,8 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const windDirRef = useRef(0)
   const finalWindSpd = useRef(0)
   const finalWindDir = useRef(0)
+  const progressRef = useRef(0)
+  const rafRef = useRef(null)
 
   const { progress, visibility, temperature } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
@@ -92,6 +95,37 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     setTemperatureH(hourly.apparent_temperature[index])
   }, [index, indexD])
 
+  useEffect(() => {
+    cancelAnimationFrame(rafRef.current)
+
+    const animate = () => {
+      let current = progressRef.current
+      let diff = sunProgress - current
+
+      if (diff > 0.5) diff -= 1
+      if (diff < -0.5) diff += 1
+
+      current += diff * 0.05
+
+      if (current >= 1) current -= 1
+      if (current < 0) current += 1
+
+      progressRef.current = current
+      setAnimatedProgress(current)
+
+      if (Math.abs(diff) > 0.001) {
+        rafRef.current = requestAnimationFrame(animate)
+      } else {
+        progressRef.current = sunProgress
+        setAnimatedProgress(sunProgress)
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(animate)
+
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [sunProgress])
+
   useFrame((_, delta) => {
     delta = Math.min(delta, 0.05)
     const gustCycle = isDebug ? period : 20
@@ -147,11 +181,11 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
 
   return (
     <>
-      <WorldSky progress={isDebug ? progress : sunProgress} snowDepth={isDebug ? depth : snowDepth} />
+      <WorldSky progress={isDebug ? progress : animatedProgress} snowDepth={isDebug ? depth : snowDepth} />
       <Windvane windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
-      <Grass progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} snowDepth={isDebug ? depth : snowDepth} />
-      <Pond progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} precipitation={isDebug ? rain : rainH} />
-      <Tree progress={isDebug ? progress : sunProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
+      <Grass progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} snowDepth={isDebug ? depth : snowDepth} />
+      <Pond progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} precipitation={isDebug ? rain : rainH} />
+      <Tree progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
       <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
       <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
