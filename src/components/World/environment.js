@@ -173,17 +173,11 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     finalWindDir.current = windDirRef.current + sway
   })
 
-  const lightPos = new THREE.Vector3(...param.streetlightPos)
-  const targetPos = new THREE.Vector3(...param.streetlightTargetPos)
-
-  const lightDir = new THREE.Vector3()
-  lightDir.subVectors(targetPos, lightPos).normalize()
-
   return (
     <>
       <WorldSky progress={isDebug ? progress : animatedProgress} snowDepth={isDebug ? depth : snowDepth} />
       <Windvane windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
-      <Grass progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} lightDir={lightDir} snowDepth={isDebug ? depth : snowDepth} />
+      <Grass progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
       <Pond progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} rain={isDebug ? rain : rainH} temp={isDebug ? temperature : temperatureH} />
       <Tree progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
       <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
