@@ -45,7 +45,7 @@ export const param = {
   pondPos: [-0.5, 0.01, -1.1],
   sunRadius: 15,
   streetlightPos: [0.3, 0.8, -0.1],
-  streetlightTargetPos: [0.2, -1, 0.5],
+  streetlightTargetPos: [0.3, -1, 0.2],
 }
 
 export function weatherIcon(code, isDay = 0, background = 1) {

@@ -223,7 +223,7 @@ export function Streetlight({ progress, snowDepth }) {
       <spotLight castShadow
         ref={spotLightRef}
         position={param.streetlightPos}
-        angle={1.0}
+        angle={0.9}
         penumbra={0.5}
         intensity={isDay ? 0 : 200}
         distance={100}
