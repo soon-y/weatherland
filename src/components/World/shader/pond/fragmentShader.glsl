@@ -1,157 +1,115 @@
-uniform float uTime;
-uniform vec2 uWindDir;
-uniform float uWindSpeed;
+#pragma glslify: sampleNormal = require('./common/wave/sampleNormal.glsl')
+#pragma glslify: sampleWave = require('./common/wave/sampleWave.glsl')
+#pragma glslify: sampleRippleNormal = require('./common/wave/sampleRippleNormal.glsl')
+#pragma glslify: getRippleHighlight = require('./common/light/getRippleHighlight.glsl')
+
+uniform float uFreeze;
 uniform float uProgress;
 
-uniform vec3 uLightPos;
-uniform vec3 uLightDir;
-uniform float uLightAngle;
-uniform float uLightPenumbra;
-
-uniform int uRippleCount;
-uniform vec2 uRipplePos[20];
-uniform float uRippleAge[20];
-
 varying vec2 vUv;
-varying vec3 vWorldPos;
-varying vec3 vNormal;
+varying vec2 vLocalPos;
+
+float getDayFactor() {
+  if(uProgress < 0.24)
+    return 0.0;
+
+  if(uProgress < 0.26)
+    return smoothstep(0.24, 0.26, uProgress);
+
+  if(uProgress < 0.74)
+    return 1.0;
+
+  if(uProgress < 0.76)
+    return 1.0 - smoothstep(0.74, 0.76, uProgress);
+
+  return 0.0;
+}
+
+float getSunHeight() {
+  const float PI = 3.14159265359;
+  float day = getDayFactor();
+
+  if(day <= 0.0)
+    return 0.0;
+
+  float t = clamp((uProgress - 0.25) / 0.5, 0.0, 1.0);
+  return sin(t * PI);
+}
+
+vec3 applyFreeze(vec3 color) {
+  if(uFreeze <= 0.0)
+    return color;
+
+  float day = getDayFactor();
+  float sun = getSunHeight();
+
+  vec3 nightIceColor = vec3(0.16, 0.20, 0.24);
+  vec3 noonIceColor = vec3(0.86, 0.92, 0.96);
+  vec3 sunsetIceColor = vec3(0.76, 0.84, 0.90);
+
+  vec3 iceColor = mix(nightIceColor, mix(sunsetIceColor, noonIceColor, sun), day);
+
+  color = mix(color, iceColor, uFreeze * 0.8);
+  return color;
+}
+
+vec3 getWaterColor() {
+  float day = getDayFactor();
+  float sun = getSunHeight();
+
+  vec3 night = vec3(0.05, 0.08, 0.10);
+  vec3 noon = vec3(0.17, 0.34, 0.28);
+  vec3 sunset = vec3(0.20, 0.30, 0.24);
+
+  vec3 dayColor = mix(sunset, noon, sun);
+
+  return mix(night, dayColor, day);
+}
+
+vec3 getPondLight(vec2 uv) {
+  float lamp = 1.0 - getDayFactor();
+
+  vec2 p = uv * 2.0 - 1.0;
+  float d = length(p);
+  float light = 1.0 - smoothstep(0.65, 1.0, d);
+  light = pow(light, 1.5);
+
+  vec3 lightColor = vec3(1.0, 0.98, 0.68);
+
+  return lightColor * light * 0.18 * lamp;
+}
 
 void main() {
-  vec3 shallow = vec3(0.35, 0.55, 0.45);
-  vec3 deep = vec3(0.05, 0.2, 0.15);
+  vec3 normal = sampleNormal(vLocalPos, vUv);
+  normal += vec3(sampleRippleNormal(vUv), 0.0);
+  normal = normalize(normal);
 
-  float depthFactor = clamp(vUv.y, 0.0, 1.0);
-  vec3 waterColor = mix(shallow, deep, depthFactor);
+  vec3 color = getWaterColor();
+  vec3 pondLight = getPondLight(vUv);
 
-  float edgeDist = length(vUv - vec2(0.5));
-  float edgeDark = smoothstep(0.3, 0.5, edgeDist);
-  waterColor *= mix(1.0, 0.65, edgeDark);
+  float bigWave = sampleWave(vLocalPos, vUv);
 
-  float dist = abs(uProgress - 0.5);
+  bigWave = abs(bigWave);
+  bigWave = smoothstep(0.02, 0.05, bigWave);
+  bigWave *= pow(1.0 - uFreeze, 2.0);
 
-  float inside = 1.0 - smoothstep(0.25, 0.26, dist);
-
-  float innerCurve = 1.0 - pow(dist / 0.25, 1.2);
-
-  innerCurve = clamp(innerCurve, 0.0, 1.0);
-
-  float innerBrightness = mix(0.85, 1.0, innerCurve);
-
-  float outerBrightness = 0.15;
-
-  float brightness = mix(outerBrightness, innerBrightness, inside);
-
-  vec3 viewDir = normalize(cameraPosition - vWorldPos);
-
-  vec3 skyTop = vec3(0.6, 0.75, 0.7);
-  vec3 skyBottom = vec3(0.7, 0.8, 0.75);
-
-  vec2 dir = normalize(uWindDir);
-  vec2 centered = vUv - 0.5;
-
-  vec2 rotated = vec2(dot(centered, dir), dot(centered, vec2(-dir.y, dir.x)));
-
-  float flow = rotated.x * 15.0;
-
-  vec3 n = normalize(vNormal);
-
-  float ripple = 0.0;
-  vec2 rippleNormal = vec2(0.0);
-  vec2 pondUv = vUv * 2.0 - 1.0;
-
-  for(int i = 0; i < 20; i++) {
-    if(i >= uRippleCount)
-      break;
-
-    vec2 diff = pondUv - uRipplePos[i];
-    float d = length(diff);
-    float radius = uRippleAge[i] * 0.25;
-    float ring = sin((d - radius) * 60.0);
-    ring *= exp(-25.0 * abs(d - radius));
-    ring = max(ring, 0.0);
-
-    float fade = 1.0 - clamp(uRippleAge[i] / 2.0, 0.0, 1.0);
-
-    float contribution = ring * fade;
-
-    ripple += contribution;
-
-    if(d > 0.001)
-      rippleNormal += normalize(diff) * contribution;
-  }
-
-  float strength = clamp(uWindSpeed * 0.05, 0.02, 0.15);
-
-  n.x += dir.x * sin(flow + uTime * 2.0) * strength;
-  n.z += dir.y * sin(flow + uTime * 2.0) * strength;
-
-  n.x += rippleNormal.x * 0.5;
-  n.z += rippleNormal.y * 0.5;
-
-  n = normalize(n);
-
-  vec2 distortUv = vUv + n.xz * 0.1;
-
-  float skyMix = clamp((viewDir.y + n.y) * 0.5, 0.0, 1.0);
-
-  vec3 fakeReflection = mix(skyBottom, skyTop, skyMix + distortUv.x * 0.3);
-  float fresnel = pow(1.0 - max(dot(n, viewDir), 0.0), 3.5);
-
-  vec3 dayColor = waterColor;
-  vec3 nightColor = vec3(0.04, 0.08, 0.1);
-
-  waterColor = mix(nightColor, dayColor, brightness);
-
-  fakeReflection *= mix(0.1, 1.0, brightness);
-
-  vec3 color = mix(waterColor, fakeReflection, fresnel);
-  color *= mix(0.6, 1.0, brightness);
-
-  vec3 lightToFrag = normalize(vWorldPos - uLightPos);
-  vec3 lightForward = normalize(uLightDir);
-
-  float theta = dot(lightToFrag, lightForward);
-
-  float cutoff = cos(uLightAngle);
-  float outerCutoff = cos(uLightAngle * (1.0 + uLightPenumbra));
-
-  float intensity = smoothstep(outerCutoff, cutoff, theta);
-
-  float distToLight = distance(vWorldPos, uLightPos);
-
-  float attenuation = smoothstep(40.0, 0.0, distToLight);
-  attenuation = pow(attenuation, 2.0);
-
-  float nightMask = step(uProgress, 0.25) + step(0.75, uProgress);
-
-  nightMask = clamp(nightMask, 0.0, 1.0);
-
-  float spotlight = intensity * attenuation * nightMask;
-
-  vec3 warmLight = vec3(1.1, 1.0, 0.8);
-  color += waterColor * warmLight * spotlight * 0.4;
-
-  vec3 reflectDir = reflect(-lightForward, n);
-
-  float specular = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
-
-  specular *= spotlight;
-
-  color += warmLight * specular * 1.5;
-  color += ripple * 0.12;
-
-  float alpha = 0.5 + depthFactor * 0.25;
+  color = mix(color, vec3(1.0), bigWave * 0.18);
+  color += getRippleHighlight(vUv, uFreeze);
+  color = applyFreeze(color);
+  color += pondLight * mix(1.0, 0.7, uFreeze);
 
   vec2 p = vUv * 2.0 - 1.0;
 
   if(p.y > 0.0)
     discard;
+
   if(length(p) > 1.0)
     discard;
 
-  float mask = 1.0 - smoothstep(0.95, 1.0, length(p));
+  float alpha = 1.0 - smoothstep(0.95, 1.0, length(p));
+  float waterAlpha = 0.55;
+  float iceAlpha = 0.92;
+  float finalAlpha = alpha * mix(waterAlpha, iceAlpha, uFreeze);
 
-  alpha *= mask;
-
-  gl_FragColor = vec4(color, alpha);
+  gl_FragColor = vec4(color, finalAlpha);
 }

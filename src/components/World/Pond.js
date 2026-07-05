@@ -5,34 +5,35 @@ import { param } from "@/lib/param"
 import vertexShader from './shader/pond/vertexShader.glsl'
 import fragmentShader from './shader/pond/fragmentShader.glsl'
 
-export default function Pond({ progress, windDir, windSpd, lightDir, precipitation }) {
+export default function Pond({ progress, windDir, windSpd, lightDir, rain, temp }) {
   const materialRef = useRef()
   const ripplesRef = useRef([])
+  const waveOffset = useRef(0)
   const rippleTimerRef = useRef(0)
   const MAX_RIPPLES = 20
+  const freezeRef = useRef(0)
 
   const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
     uWindDir: { value: new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current)) },
     uWindSpeed: { value: windSpd.current },
     uProgress: { value: 0 },
-    uLightPos: { value: new THREE.Vector3(...param.streetlightPos) },
-    uLightDir: { value: lightDir },
-    uLightAngle: { value: 2 },
-    uLightPenumbra: { value: 0.5 },
     uRippleCount: { value: 0 },
     uRipplePos: { value: Array.from({ length: MAX_RIPPLES }, () => new THREE.Vector2()) },
     uRippleAge: { value: new Float32Array(MAX_RIPPLES) },
+    uTemp: { value: 0 },
+    uFreeze: { value: 0 },
+    uWaveOffset: { value: 0 },
   }), [])
 
   useFrame((_, delta) => {
+    delta = Math.min(delta, 0.05)
     const mat = materialRef.current
     if (!mat) return
 
     rippleTimerRef.current += delta
 
-    if (precipitation > 0) {
-      const interval = Math.max( 0.02, 0.15 / Math.sqrt(precipitation))
+    if (rain > 0) {
+      const interval = Math.max(0.02, 0.15 / Math.sqrt(rain))
 
       if (rippleTimerRef.current > interval) {
         rippleTimerRef.current = 0
@@ -52,12 +53,30 @@ export default function Pond({ progress, windDir, windSpd, lightDir, precipitati
 
     ripplesRef.current = ripplesRef.current.filter(ripple => ripple.age < 1.0)
 
-    mat.uniforms.uTime.value += delta
+    const targetTemp = temp <= 0 ? 1 : 0
+
+    freezeRef.current = THREE.MathUtils.lerp(
+      freezeRef.current,
+      targetTemp,
+      1.0 - Math.exp(-0.3 * delta * 60)
+    )
+
+    waveOffset.current += delta * THREE.MathUtils.lerp(
+      0.4,
+      0.9,
+      windSpd.current / 15
+    )
+
+    mat.uniforms.uWaveOffset.value = waveOffset.current
     mat.uniforms.uProgress.value = progress
     mat.uniforms.uWindDir.value = new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current))
     mat.uniforms.uWindSpeed.value = windSpd.current
     mat.uniforms.uRippleCount.value = ripplesRef.current.length
-    for ( let i = 0; i < MAX_RIPPLES; i++ ) {
+    mat.uniforms.uTemp.value = temp ?? 10
+    mat.uniforms.uFreeze.value = freezeRef.current
+    mat.uniforms.uWaveOffset.value = waveOffset.current
+
+    for (let i = 0; i < MAX_RIPPLES; i++) {
       const ripple = ripplesRef.current[i]
       if (ripple) {
         mat.uniforms.uRipplePos.value[i].set(ripple.x, ripple.y)
@@ -69,7 +88,7 @@ export default function Pond({ progress, windDir, windSpd, lightDir, precipitati
   return (
     <mesh rotation-x={-Math.PI / 2} position={[0, param.groundPos[1], -1]}>
       <planeGeometry args={[param.groundRadius * 3.5, param.groundRadius * 3.5, 256, 256]} />
-      <shaderMaterial 
+      <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
