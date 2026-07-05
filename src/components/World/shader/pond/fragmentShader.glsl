@@ -66,17 +66,16 @@ vec3 getWaterColor() {
   return mix(night, dayColor, day);
 }
 
-vec3 getPondLight(vec2 uv) {
+float getStreetLight(vec2 uv) {
   float lamp = 1.0 - getDayFactor();
 
   vec2 p = uv * 2.0 - 1.0;
+  p -= vec2(0.2, 0.1);
   float d = length(p);
   float light = 1.0 - smoothstep(0.65, 1.0, d);
   light = pow(light, 1.5);
 
-  vec3 lightColor = vec3(1.0, 0.98, 0.68);
-
-  return lightColor * light * 0.18 * lamp;
+  return light * lamp;
 }
 
 void main() {
@@ -85,7 +84,7 @@ void main() {
   normal = normalize(normal);
 
   vec3 color = getWaterColor();
-  vec3 pondLight = getPondLight(vUv);
+  float streetLight = getStreetLight(vUv);
 
   float bigWave = sampleWave(vLocalPos, vUv);
 
@@ -93,10 +92,12 @@ void main() {
   bigWave = smoothstep(0.02, 0.05, bigWave);
   bigWave *= pow(1.0 - uFreeze, 2.0);
 
-  color = mix(color, vec3(1.0), bigWave * 0.18);
-  color += getRippleHighlight(vUv, uFreeze);
+  color = mix(color, vec3(1.0), bigWave * 0.18 * streetLight);
+  color += getRippleHighlight(vUv, uFreeze) * streetLight;
   color = applyFreeze(color);
-  color += pondLight * mix(1.0, 0.7, uFreeze);
+
+  vec3 lightColor = vec3(1.0, 0.98, 0.68);
+  color += lightColor * streetLight * 0.18;
 
   vec2 p = vUv * 2.0 - 1.0;
 
