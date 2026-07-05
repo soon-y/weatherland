@@ -67,15 +67,17 @@ vec3 getWaterColor() {
 }
 
 float getStreetLight(vec2 uv) {
-  float lamp = 1.0 - getDayFactor();
+  float night = 1.0 - getDayFactor();
 
   vec2 p = uv * 2.0 - 1.0;
   p -= vec2(0.2, 0.1);
+
   float d = length(p);
+
   float light = 1.0 - smoothstep(0.65, 1.0, d);
   light = pow(light, 1.5);
 
-  return light * lamp;
+  return mix(1.0, light, night);
 }
 
 void main() {
