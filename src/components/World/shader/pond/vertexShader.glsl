@@ -14,14 +14,15 @@ void main() {
     vLocalPos = position.xy;
 
     vec3 pos = position;
-    vec3 normal = vec3(0.0, 0.0, 1.0);
 
-    if (uFreeze < 0.99) {
-        float height = sampleWave(position.xy, uv);
-        height += sampleRippleHeight(uv) * 0.15;
-        pos.z += height;
-        normal = sampleNormal(position.xy, uv);
-    }
+    float freezeStrength = 1.0 - smoothstep(0.3, 0.9, uFreeze);
+
+    float height = sampleWave(position.xy, uv) * freezeStrength;
+    height += sampleRippleHeight(uv) * 0.05 * freezeStrength;
+
+    pos.z += height;
+
+    vec3 normal = mix(sampleNormal(position.xy, uv), vec3(0.0, 0.0, 1.0), smoothstep(0.7, 1.0, uFreeze));
 
     vNormal = normalize(normalMatrix * normal);
     vec4 worldPos = modelMatrix * vec4(pos, 1.0);

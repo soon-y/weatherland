@@ -89,10 +89,11 @@ void main() {
   float streetLight = getStreetLight(vUv);
 
   float bigWave = sampleWave(vLocalPos, vUv);
+  float waveFade = 1.0 - smoothstep(0.15, 0.45, uFreeze);
 
   bigWave = abs(bigWave);
   bigWave = smoothstep(0.02, 0.05, bigWave);
-  bigWave *= pow(1.0 - uFreeze, 2.0);
+  bigWave *= waveFade;
 
   color = mix(color, vec3(1.0), bigWave * 0.18 * streetLight);
   color += getRippleHighlight(vUv, uFreeze) * streetLight;
