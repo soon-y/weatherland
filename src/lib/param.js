@@ -249,10 +249,10 @@ export function timeToSec(hour, min = 0) {
 }
 
 export const rainColorList = [
-  '#78d7e8',
-  '#11bde8',
+  '#0974b2',
   '#0e87ce',
-  '#0974b2'
+  '#11bde8',
+  '#78d7e8'
 ]
 export function precipIntensity(type, amount) {
   if (type === 'snow') {
@@ -315,11 +315,11 @@ export const airQuality = (val) => {
 
 export const visibilityOffsets = [3, 7, 10, 13, 25]
 export const visibilityColorList = [
-  '#5B708E',
-  '#4669B6',
-  '#3D99C0',
-  '#37AFE3',
-  '#38BDF8'
+  '#EF4444',
+  '#F97316',
+  '#EAB308',
+  '#84CC16', 
+  '#22C55E' 
 ]
 export const visibilityInfo = (val) => {
   if (val >= 10) return { state: "Clear", desc: "Clear conditions with excellent visibility." }
