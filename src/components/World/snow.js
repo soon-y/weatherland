@@ -8,7 +8,8 @@ const AREA = 100
 const HEIGHT = 40
 const groundY = param.groundPos[1]
 
-export default function Snow({ windDir, windSpd, precipitation, isDay }) {
+export default function Snow({ windDir, windSpd, precipitation, isDay, weather }) {
+  const snowValue = precipitation ?? weather.current.snow
   const meshRef = useRef()
 
   const dummy = useMemo(
@@ -33,7 +34,7 @@ export default function Snow({ windDir, windSpd, precipitation, isDay }) {
     delta = Math.min(delta, 0.05)
     if (!meshRef.current) return
 
-    if (precipitation <= 0) {
+    if (snowValue <= 0) {
       meshRef.current.count = 0
       return
     }
@@ -46,7 +47,7 @@ export default function Snow({ windDir, windSpd, precipitation, isDay }) {
 
     const visibleCount = Math.min(
       MAX_COUNT,
-      Math.floor(Math.pow(precipitation, 0.8) * 600)
+      Math.floor(Math.pow(snowValue, 0.8) * 600)
     )
 
     const windEffect = Math.min(wind, 15)

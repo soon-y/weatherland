@@ -40,9 +40,10 @@ vec3 nightColor = vec3(0.03, 0.04, 0.06);
 }
 `
 
-export default function MistOverlay({ visibility, isDay }) {
+export default function MistOverlay({ visibility, isDay, weather }) {
   const meshRef = useRef()
   const matRef = useRef()
+  const visibilityValue = visibility ?? weather.current.visibility
 
   const { camera } = useThree()
 
@@ -63,7 +64,7 @@ export default function MistOverlay({ visibility, isDay }) {
     matRef.current.uniforms.uIsDay.value = isDay ? 1 : 0
 
     const mistStrength = THREE.MathUtils.clamp(
-      (3000 - visibility) / 3000,
+      (3000 - visibilityValue) / 3000,
       0,
       1
     )

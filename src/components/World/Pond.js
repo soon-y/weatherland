@@ -5,13 +5,16 @@ import { param } from "@/lib/param"
 import vertexShader from './shader/pond/vertexShader.glsl'
 import fragmentShader from './shader/pond/fragmentShader.glsl'
 
-export default function Pond({ progress, windDir, windSpd, lightDir, rain, temp }) {
+export default function Pond({ progress, windDir, windSpd, rain, temp, weather }) {
   const materialRef = useRef()
   const ripplesRef = useRef([])
   const waveOffset = useRef(0)
   const rippleTimerRef = useRef(0)
   const MAX_RIPPLES = 20
   const freezeRef = useRef(0)
+
+  const rainValue = rain ?? weather.current.rain
+  const tempValue = temp ?? weather.current.temperature
 
   const uniforms = useMemo(() => ({
     uWindDir: { value: new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current)) },
@@ -32,8 +35,8 @@ export default function Pond({ progress, windDir, windSpd, lightDir, rain, temp 
 
     rippleTimerRef.current += delta
 
-    if (rain > 0) {
-      const interval = Math.max(0.02, 0.15 / Math.sqrt(rain))
+    if (rainValue) {
+      const interval = Math.max(0.02, 0.15 / Math.sqrt(rainValue))
 
       if (rippleTimerRef.current > interval) {
         rippleTimerRef.current = 0
@@ -53,7 +56,7 @@ export default function Pond({ progress, windDir, windSpd, lightDir, rain, temp 
 
     ripplesRef.current = ripplesRef.current.filter(ripple => ripple.age < 1.0)
 
-    const targetTemp = temp <= 0 ? 1 : 0
+    const targetTemp = temp == null ? 0 : temp <= 0 ? 1 : 0
 
     freezeRef.current = THREE.MathUtils.lerp(
       freezeRef.current,
@@ -72,7 +75,7 @@ export default function Pond({ progress, windDir, windSpd, lightDir, rain, temp 
     mat.uniforms.uWindDir.value = new THREE.Vector2(Math.cos(windDir.current), Math.sin(windDir.current))
     mat.uniforms.uWindSpeed.value = windSpd.current
     mat.uniforms.uRippleCount.value = ripplesRef.current.length
-    mat.uniforms.uTemp.value = temp ?? 10
+    mat.uniforms.uTemp.value = tempValue ?? 10
     mat.uniforms.uFreeze.value = freezeRef.current
     mat.uniforms.uWaveOffset.value = waveOffset.current
 

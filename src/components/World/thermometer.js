@@ -8,8 +8,9 @@ import * as THREE from 'three'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { tempColorIndex, tempColorList } from '@/lib/param'
 
-export function Thermometer({ temp, snowDepth }) {
+export function Thermometer({ temp, snowDepth, weather }) {
   const { nodes, materials } = useGLTF('/models/thermometer.glb')
+  const tempValue = temp ?? weather.current.temperature
   const liquidRef = useRef()
   const liquidMaterialRef = useRef()
   const screenRef = useRef([])
@@ -27,7 +28,7 @@ export function Thermometer({ temp, snowDepth }) {
     if (!liquidMaterialRef.current) return
   
     let face
-    const visible = temp != null
+    const visible = tempValue != null
 
     screenRef.current.forEach(material => {
       if (!material) return
@@ -36,21 +37,21 @@ export function Thermometer({ temp, snowDepth }) {
       material.opacity = visible ? 1 : 0
     })
 
-    if (temp < 0) {
+    if (tempValue < 0) {
       face = freezeFace
-    } else if (temp <= 10) {
+    } else if (tempValue <= 10) {
       face = coldFace
-    } else if (temp <= 25) {
+    } else if (tempValue <= 25) {
       face = normalFace
-    } else if (temp <= 30) {
+    } else if (tempValue <= 30) {
       face = warmFace
-    } else if (temp <= 35) {
+    } else if (tempValue <= 35) {
       face = hotFace
     } else {
       face = blazingFace
     }
 
-    const color = tempColorList[tempColorIndex(temp)]
+    const color = tempColorList[tempColorIndex(tempValue)]
 
     screenRef.current.forEach(material => {
       if (!material) return
@@ -61,7 +62,7 @@ export function Thermometer({ temp, snowDepth }) {
     })
 
     liquidMaterialRef.current.color.set(color)
-  }, [temp])
+  }, [tempValue])
 
   useFrame((_, delta) => {
     delta = Math.min(delta, 0.05)
@@ -92,7 +93,7 @@ export function Thermometer({ temp, snowDepth }) {
     )
 
     const targetScale = THREE.MathUtils.mapLinear(
-      temp ?? 0, -50, 50, -0.04, 0.04
+      tempValue ?? 0, -50, 50, -0.04, 0.04
     )
 
     liquidRef.current.scale.y = THREE.MathUtils.lerp(

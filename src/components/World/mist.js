@@ -10,9 +10,10 @@ const center = [0, 0, 0]
 const area = 17
 const height = 17
 
-export default function Mist({ visibility, isDay }) {
+export default function Mist({ visibility, isDay, weather }) {
   const pointsRef = useRef()
   const materialRef = useRef()
+  const visibilityValue = visibility ?? weather.current.visibility
 
   const positions = useMemo(() => {
     const arr = new Float32Array(MAX_COUNT * 3)
@@ -75,7 +76,7 @@ export default function Mist({ visibility, isDay }) {
 
     materialRef.current.uniforms.uTime.value += delta
     materialRef.current.uniforms.uIsDay.value = isDay ? 1 : 0
-    materialRef.current.uniforms.uStrength.value = Math.pow(THREE.MathUtils.clamp(1 - visibility / 5000, 0, 1), 2)
+    materialRef.current.uniforms.uStrength.value = Math.pow(THREE.MathUtils.clamp(1 - visibilityValue / 5000, 0, 1), 2)
 
     for (let i = 0; i < MAX_COUNT; i++) {
       const idx = i * 3

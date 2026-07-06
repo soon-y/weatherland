@@ -7,36 +7,37 @@ import { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import gsap from 'gsap'
 
-export function Umbrella({ precipitation }) {
+export function Umbrella({ precipitation, weather }) {
   const { nodes, materials } = useGLTF('/models/umbrella.glb')
   const umbrellaRef = useRef()
+  const precipitationValue = precipitation ?? weather.current.precipitation
 
   useEffect(() => {
-  if (!umbrellaRef.current) return
+    if (!umbrellaRef.current) return
 
-  const material = umbrellaRef.current.material
+    const material = umbrellaRef.current.material
 
-  material.transparent = true
-  material.side = THREE.DoubleSide
+    material.transparent = true
+    material.side = THREE.DoubleSide
 
-  const t = THREE.MathUtils.clamp(
-    precipitation / 5,
-    0,
-    1
-  )
+    const t = THREE.MathUtils.clamp(
+      precipitationValue / 5,
+      0,
+      1
+    )
 
-  const opacity = THREE.MathUtils.lerp(0.2, 0.9, t)
+    const opacity = THREE.MathUtils.lerp(0.2, 0.9, t)
 
-  gsap.to(material, {
-    opacity,
-    duration: 1,
-    ease: 'power2.out'
-  })
+    gsap.to(material, {
+      opacity,
+      duration: 1,
+      ease: 'power2.out'
+    })
 
-}, [precipitation])
+  }, [precipitationValue])
 
   return (
-    <group dispose={null} scale={2.3} position={[0.33, -4.0, -3.05]} visible={precipitation > 0.3}>
+    <group dispose={null} scale={2.3} position={[0.33, -4.0, -3.05]} visible={precipitationValue > 0.3}>
       <mesh
         castShadow
         receiveShadow

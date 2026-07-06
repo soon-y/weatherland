@@ -7,7 +7,8 @@ const MAX_COUNT = 5000
 const AREA = 100
 const HEIGHT = 30
 
-export default function Rain({ windDir, windSpd, precipitation, isDay }) {
+export default function Rain({ windDir, windSpd, precipitation, isDay, weather }) {
+  const rainValue = precipitation ?? weather.current.rain
   const meshRef = useRef()
 
   const dummy = useMemo(
@@ -30,7 +31,7 @@ export default function Rain({ windDir, windSpd, precipitation, isDay }) {
     delta = Math.min(delta, 0.05)
     if (!meshRef.current) return
 
-    if (precipitation <= 0) {
+    if (rainValue <= 0) {
       meshRef.current.count = 0
       return
     }
@@ -40,7 +41,7 @@ export default function Rain({ windDir, windSpd, precipitation, isDay }) {
     const visibleCount = Math.min(
       MAX_COUNT,
       Math.floor(
-        Math.sqrt(precipitation) * 400
+        Math.sqrt(rainValue) * 400
       )
     )
 

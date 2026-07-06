@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useControls } from "leva"
 import { useEffect, useRef, useState } from "react"
-import { param, timeToSec, useIsDebug } from "@/lib/param"
+import { timeToSec, useIsDebug } from "@/lib/param"
 import WorldSky from "./Sky"
 import Grass from "./Grass"
 import { Windvane } from "./Windvane"
@@ -21,11 +21,6 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const [windDirH, setWindDirH] = useState(0)
   const [windSpdH, setWindSpdH] = useState(0)
   const [gustsSpdH, setGustsSpdH] = useState(0)
-  const [temperatureH, setTemperatureH] = useState(null)
-  const [precipitationH, setPrecipitationH] = useState(0)
-  const [rainH, setRainH] = useState(0)
-  const [snowH, setSnowH] = useState(0)
-  const [visibilityH, setVisibility] = useState(5000)
   const [snowDepth, setSnowDepth] = useState(0)
   const isDebug = useIsDebug()
   const timeRef = useRef(0)
@@ -35,6 +30,22 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
   const finalWindDir = useRef(0)
   const progressRef = useRef(0)
   const rafRef = useRef(null)
+
+  const weather = useRef({
+    rain: 0,
+    snow: 0,
+    visibility: 5000,
+    precipitation: 0,
+    temperature: null
+  })
+
+  const targetWeather = useRef({
+    rain: 0,
+    snow: 0,
+    visibility: 5000,
+    precipitation: 0,
+    temperature: null
+  })
 
   const { progress, visibility, temperature } = useControls('Day', {
     progress: { value: 0.5, min: 0, max: 1, step: 0.01 },
@@ -87,12 +98,15 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     setWindDirH(hourly.wind_direction_10m[index])
     setWindSpdH(hourly.wind_speed_10m[index])
     setGustsSpdH(hourly.wind_gusts_10m[index])
-    setRainH(hourly.rain[index])
-    setSnowH(hourly.snowfall[index])
-    setVisibility(hourly.visibility[index])
     setSnowDepth(hourly.snow_depth[index])
-    setPrecipitationH(hourly.precipitation[index])
-    setTemperatureH(hourly.apparent_temperature[index])
+
+    targetWeather.current = {
+      rain: hourly.rain[index],
+      snow: hourly.snowfall[index],
+      visibility: hourly.visibility[index],
+      precipitation: hourly.precipitation[index],
+      temperature: hourly.apparent_temperature[index]
+    }
   }, [index, indexD])
 
   useEffect(() => {
@@ -171,6 +185,45 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     const sway = Math.sin(timeRef.current * 2) * (finalWindSpd.current * 0.001)
 
     finalWindDir.current = windDirRef.current + sway
+
+    weather.current.rain = THREE.MathUtils.damp(
+      weather.current.rain,
+      targetWeather.current.rain,
+      5,
+      delta
+    )
+
+    weather.current.snow = THREE.MathUtils.damp(
+      weather.current.snow,
+      targetWeather.current.snow,
+      5,
+      delta
+    )
+
+    weather.current.visibility = THREE.MathUtils.damp(
+      weather.current.visibility,
+      targetWeather.current.visibility,
+      5,
+      delta
+    )
+
+    weather.current.precipitation = THREE.MathUtils.damp(
+      weather.current.precipitation,
+      targetWeather.current.precipitation,
+      5,
+      delta
+    )
+
+    if (targetWeather.current.temperature == null) {
+      weather.current.temperature = null
+    } else {
+      weather.current.temperature = THREE.MathUtils.damp(
+        weather.current.temperature ?? targetWeather.current.temperature,
+        targetWeather.current.temperature,
+        5,
+        delta
+      )
+    }
   })
 
   return (
@@ -178,14 +231,14 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
       <WorldSky progress={isDebug ? progress : animatedProgress} snowDepth={isDebug ? depth : snowDepth} />
       <Windvane windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
       <Grass progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
-      <Pond progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} rain={isDebug ? rain : rainH} temp={isDebug ? temperature : temperatureH} />
+      <Pond progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} rain={isDebug ? rain : undefined} temp={isDebug ? temperature : undefined} weather={isDebug ? undefined : weather} />
       <Tree progress={isDebug ? progress : animatedProgress} windDir={finalWindDir} windSpd={finalWindSpd} snowDepth={isDebug ? depth : snowDepth} />
-      <Rain windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? rain : rainH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <Snow windDir={finalWindDir} windSpd={finalWindSpd} precipitation={isDebug ? snow : snowH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <Mist visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <MistOverlay visibility={isDebug ? visibility : visibilityH} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} />
-      <Umbrella precipitation={isDebug ? precipitation : precipitationH} />
-      <Thermometer temp={isDebug ? temperature : temperatureH} snowDepth={isDebug ? depth : snowDepth} />
+      <Rain windDir={finalWindDir} windSpd={finalWindSpd} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} precipitation={isDebug ? rain : undefined} weather={isDebug ? undefined : weather} />
+      <Snow windDir={finalWindDir} windSpd={finalWindSpd} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} precipitation={isDebug ? snow : undefined} weather={isDebug ? undefined : weather} />
+      <Mist visibility={isDebug ? visibility : undefined} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} weather={isDebug ? undefined : weather} />
+      <MistOverlay visibility={isDebug ? visibility : undefined} isDay={isDebug ? progress >= 0.25 && progress <= 0.75 : hourly?.is_day[index]} weather={isDebug ? undefined : weather} />
+      <Umbrella precipitation={isDebug ? precipitation : undefined} weather={isDebug ? undefined : weather} />
+      <Thermometer temp={isDebug ? temperature : undefined} snowDepth={isDebug ? depth : snowDepth} weather={isDebug ? undefined : weather} />
     </>
   )
 }
