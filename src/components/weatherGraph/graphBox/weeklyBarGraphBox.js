@@ -46,9 +46,9 @@ export default function WeeklyBarGraphBox({ display, hourly, indexW, min, max, s
   }
 
   const rainColorIndex = (i) => {
-    if (i < 10) return 0
-    else if (i < 30) return 1
-    else if (i < 50) return 2
+    if (i < 1) return 0
+    else if (i < 10) return 1
+    else if (i < 30) return 2
     else return 3
   }
 
