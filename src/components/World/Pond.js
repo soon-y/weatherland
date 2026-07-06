@@ -56,11 +56,15 @@ export default function Pond({ progress, windDir, windSpd, rain, temp, weather }
 
     ripplesRef.current = ripplesRef.current.filter(ripple => ripple.age < 1.0)
 
-    const targetTemp = temp == null ? 0 : temp <= 0 ? 1 : 0
+    let targetFreeze = 0
+
+    if (temp != null) {
+      targetFreeze = THREE.MathUtils.clamp((0 - temp) / 5, 0, 1)
+    }
 
     freezeRef.current = THREE.MathUtils.lerp(
       freezeRef.current,
-      targetTemp,
+      targetFreeze,
       1.0 - Math.exp(-0.3 * delta * 60)
     )
 
