@@ -65,7 +65,7 @@ export default function WeeklyHumidity({ humidity, indexW, index, dewPoint, temp
       </div>
 
       <WeeklyGraphBox ratio={2} graphRatio={2}
-        display={'temperature'} unit={unit} min={0} max={100} step={20}
+        display={'probability'} unit={unit} min={0} max={100} step={20}
         hourly={humidity} indexW={indexW} index={index} hoverIndex={hoverIndex} setHover={setHover}
       />
 
