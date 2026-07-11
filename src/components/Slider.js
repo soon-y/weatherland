@@ -22,6 +22,7 @@ export default function Slider({ hourly, setIndex, index, timezone }) {
   const maxIndex = tempColorIndex(max)
   const colorRange = tempColorList.slice(minIndex, maxIndex + 1)
   const isDay = hourly.is_day[index]
+  const length = 168
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,7 +30,7 @@ export default function Slider({ hourly, setIndex, index, timezone }) {
       const divide = windowWidth > 1000 ? 10 : isMobile(windowWidth) ? 6 : 4
       const box = windowWidth / divide
       setBoxWidth(box)
-      setGraphWidth(box * 168)
+      setGraphWidth(box * length)
       setSliderHeight(windowWidth >= 640 ? param.sliderHeight : 120)
     }
 
@@ -60,7 +61,7 @@ export default function Slider({ hourly, setIndex, index, timezone }) {
   }, [hourly])
 
   useEffect(() => {
-    if (!ref.current || index > 168 - 6) return
+    if (!ref.current || index > length - 6) return
 
     ref.current.scrollTo({
       left: boxWidth * index,
@@ -193,7 +194,7 @@ export default function Slider({ hourly, setIndex, index, timezone }) {
         <div className="absolute cursor-pointer" onClick={handleClick} onMouseMove={handleHover} onMouseLeave={() => setHover(null)} style={{
           top: '44px', left: boxWidth / 2,
           height: sliderHeight * 0.35 + 'px',
-          width: boxWidth * 167,
+          width: boxWidth * (length-1),
         }}>
           <svg width='100%' height='100%' className="relative overflow-visible" viewBox={`0 0 ${graphSize.w} ${graphSize.h}`}>
             <defs>
