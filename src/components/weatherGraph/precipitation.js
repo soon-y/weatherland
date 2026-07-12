@@ -11,7 +11,7 @@ export default function WeeklyPrecipitation({ display, hourProbability, hourPrec
   const probabilityMean = dailyMean[indexW]
   const totalSum = dailySum[indexW]
   const validIndex = hoverIndex - indexW * 24 >= 0 && hoverIndex - indexW * 24 < 25
-  const maxVal = param.max(hourPrecipitation)
+  const maxVal = Math.max(param.max(hourPrecipitation), 10)
   let unit = 'mm'
 
   useEffect(() => {
