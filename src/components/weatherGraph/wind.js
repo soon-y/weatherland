@@ -63,7 +63,7 @@ export default function WeeklyWind({ display, wind, indexW, index, gusts, windDa
         </div>
       </div>
       <WeeklyGraphBox
-        display={display} unit={unit} min={0} max={maxVal} step={maxVal * 0.1} hourly2={gusts} daily1={windDaily} daily2={gustsDaily}
+        display={display} unit={unit} min={0} max={maxVal} step={maxVal * 0.1} hourly2={gusts}
         hourly={wind} indexW={indexW} index={index} hoverIndex={hoverIndex} setHover={setHover} code={code}
       />
     </div>

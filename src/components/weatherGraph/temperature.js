@@ -58,7 +58,7 @@ export default function WeeklyTemperature({ display, hourly, indexW, index, hour
         </div>
       </div>
       <WeeklyGraphBox
-        display={display} unit={unit} min={minVal} max={maxVal} step={(maxVal - minVal) * 0.2} hourly2={hourly2} daily1={daily1} daily2={daily2}
+        display={display} unit={unit} min={minVal} max={maxVal} step={(maxVal - minVal) * 0.2} hourly2={hourly2}
         hourly={hourly} indexW={indexW} index={index} hoverIndex={hoverIndex} setHover={setHover} code={code} isDay={isDay}
       />
     </div>

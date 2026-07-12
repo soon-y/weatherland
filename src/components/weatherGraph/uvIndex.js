@@ -45,7 +45,7 @@ export default function WeeklyUVindex({ display, hourly, indexW, index, daily1 }
       </div>
 
       <WeeklyGraphBox
-        display={display} unit={'index'} min={0} max={maxVal} step={4} daily1={daily1}
+        display={display} unit={'index'} min={0} max={maxVal} step={4}
         hourly={hourly} indexW={indexW} index={index} hoverIndex={hoverIndex} setHover={setHover}
       />
     </div>
