@@ -245,7 +245,7 @@ export default function Slider({ hourly, setIndex, index, timezone }) {
         </div>
       </div>
 
-      <div className="fixed left-2 bottom-2 select-none">
+      <div className="fixed left-2 bottom-2 select-none pointer-events-none">
         <div className={`shadow-l2g outline rounded-lg duration-500 ${isDay ? 'outline-black/50' : 'outline-white/30'}`}
           style={{ width: boxWidth, height: sliderHeight + 'px' }}
         />
