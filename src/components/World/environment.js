@@ -140,10 +140,17 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [sunProgress])
 
+  function lerpAngle(a, b, t) {
+    let diff = ((b - a + Math.PI) % (Math.PI * 2)) - Math.PI
+    if (diff < -Math.PI) diff += Math.PI * 2
+    return a + diff * t
+  }
+
   useFrame((_, delta) => {
     delta = Math.min(delta, 0.05)
     const gustCycle = isDebug ? period : 20
-    const gustDuration = isDebug ? duration : 3
+    const gustDuration = isDebug ? duration : 4
+    const gustTransitionSpeed = 0.5
 
     timeRef.current += delta
 
@@ -154,7 +161,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     const targetSpeed = isDebug ? speed : windSpdH
     const targetGustSpeed = isDebug ? strength : gustsSpdH
 
-    windDirRef.current = THREE.MathUtils.lerp(
+    windDirRef.current = lerpAngle(
       windDirRef.current,
       targetDirection,
       delta * 3
@@ -179,7 +186,7 @@ export default function Environment({ store, hourly, daily, index, indexD }) {
     finalWindSpd.current = THREE.MathUtils.lerp(
       finalWindSpd.current,
       targetFinalWindSpd,
-      delta * 2
+      delta * gustTransitionSpeed
     )
 
     const sway = Math.sin(timeRef.current * 2) * (finalWindSpd.current * 0.001)
