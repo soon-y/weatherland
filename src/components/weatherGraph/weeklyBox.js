@@ -41,6 +41,14 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
 
   return (
     <div className={`${param.weatherBoxheight} ${param.weatherBoxStyles} px-2 duration-500 ease-in-out ${boxClicked ? 'top-12 opacity-100' : 'top-[100%] opacity-0'}`}>
+      {boxClicked && <div className='fixed left-0 w-full h-full z-0' onClick={() => {
+        setBoxClicked(false)
+        setTimeout(() => {
+          setDisplay(null)
+          setIndexW(indexD)
+        }, 300)
+      }}></div>
+      }
       <div className={`h-full w-full rounded-t-xl backdrop-blur-2xl bg-black/80 overflow-y-scroll select-none scrollbar-hide`}>
         <div className="px-4 py-4 sm:py-6 sm:px-16">
           <div className="mb-4 flex justify-center">
@@ -63,7 +71,7 @@ export default function WeeklyBox({ boxClicked, setBoxClicked, display, setDispl
           {display === 'air quality' &&
             <WeeklyAirQuality display={display} hourly={air.european_aqi} indexW={indexW} index={index} />
           }
-          {display === 'visibility' && 
+          {display === 'visibility' &&
             <WeeklyVisibility display={display} hourly={hourly.visibility} indexW={indexW} index={index} />
           }
           {display === 'humidity' &&
