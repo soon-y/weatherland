@@ -96,7 +96,7 @@ export default function WeatherInfo({ hourly, daily, air, moon, index, clicked }
           </p>
           <div>
             {!open ?
-              <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={false} />
+              <WeatherIcon code={daily.weather_code[indexD]} probability={null} isDay={isDay} background={true} />
               :
               <span className='text-base sm:text-lg'>{String(time).padStart(2, "0")}:00</span>
             }
