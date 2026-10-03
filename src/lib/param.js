@@ -283,6 +283,8 @@ export const uvIndex = (val) => {
   let ratio = Math.floor(val / 15 * max)
   let pos = ratio >= max ? max : ratio
 
+  if (val == null) return { state: 'N/A', pos: 0 }
+
   if (val < 3) return { pos, state: "Low" }
   else if (val < 6) return { pos, state: "Moderate" }
   else if (val < 8) return { pos, state: "High" }
@@ -303,6 +305,8 @@ export const airQuality = (val) => {
   let max = 95
   let ratio = Math.floor(val / 160 * max)
   let pos = ratio >= max ? max : ratio
+
+  if (val == null) return { state: 'N/A', pos: 0 }
 
   if (val < 20) return { state: "Good", pos }
   else if (val < 40) return { state: "Fair", pos }
